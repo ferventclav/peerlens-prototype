@@ -1,0 +1,1734 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>PeerLens prototype</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='14' cy='14' r='9' fill='none' stroke='%23141414' stroke-width='5'/%3E%3Ccircle cx='24' cy='24' r='5' fill='%23F5B93E'/%3E%3C/svg%3E">
+<meta name="description" content="Clickable prototype of PeerLens, a designed concept for practising case-based group discussions with peers. Critical path and statutory screens, sample data only.">
+<script>window.KIT = { offset: 124 };</script>
+<!-- studio:begin system=peerlens components=no (built by pl_build.py; edit the page, not this block) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,400..800;1,500&amp;display=swap">
+<style>
+/* web-studio site kit */
+/* web-studio site kit v1 (19 Oct 2026). The glass bar, progress line, theme reveal, reveals,
+   lift and press, and every fallback. It reads the design system's own tokens; a system that
+   needs different values sets the --kit-* variables after this file (build_page.py does). */
+:root{
+  --kit-top:var(--top,64px);
+  --kit-paper:var(--canvas,var(--bg,#faf9f6));
+  --kit-solid:var(--surface,var(--card,#ffffff));
+  --kit-ink:var(--ink,var(--label,#141313));
+  --kit-line:var(--line,var(--sep,rgba(0,0,0,.08)));
+  --kit-bar:color-mix(in srgb,var(--kit-paper) 66%,transparent);
+  --kit-blur:18px;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{color-scheme:dark}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark}}
+html{scroll-padding-top:calc(var(--kit-top) + 20px)}
+html.kit-smooth{scroll-behavior:auto}
+html.kit-smooth main[data-kit-glide]{will-change:transform}
+
+/* Glass top bar. Layout inside it belongs to the page. */
+.kit-top{position:fixed;inset:0 0 auto 0;height:var(--kit-top);z-index:60;display:flex;align-items:center;
+  background:var(--kit-bar);-webkit-backdrop-filter:blur(var(--kit-blur));backdrop-filter:blur(var(--kit-blur));
+  border-bottom:1px solid var(--kit-line);transition:box-shadow .3s ease}
+.kit-top.is-scrolled{box-shadow:0 1px 0 var(--kit-line),0 8px 24px -18px rgba(0,0,0,.35)}
+.kit-progress{position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--kit-ink);
+  transform-origin:0 50%;transform:scaleX(0);pointer-events:none}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.kit-top{background:var(--kit-paper)}}
+@media (prefers-reduced-transparency:reduce){.kit-top{background:var(--kit-paper);-webkit-backdrop-filter:none;backdrop-filter:none}}
+
+/* Theme switch: circular reveal from the button. */
+html.vt-theme::view-transition-old(root){animation:none;z-index:1}
+html.vt-theme::view-transition-new(root){animation:kitReveal .55s cubic-bezier(.4,0,.2,1) both;z-index:2}
+@keyframes kitReveal{from{clip-path:circle(0 at var(--vx,95%) var(--vy,3%))}to{clip-path:circle(150% at var(--vx,95%) var(--vy,3%))}}
+[data-kit-theme] svg{transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+:root[data-theme="dark"] [data-kit-theme] svg{transform:rotate(90deg)}
+[data-kit-theme] .kit-sun{display:none}
+:root[data-theme="dark"] [data-kit-theme] .kit-sun{display:block}
+:root[data-theme="dark"] [data-kit-theme] .kit-moon{display:none}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) [data-kit-theme] .kit-sun{display:block}
+  :root:not([data-theme="light"]) [data-kit-theme] .kit-moon{display:none}
+  :root:not([data-theme="light"]) [data-kit-theme] svg{transform:rotate(90deg)}
+}
+
+/* Reveals: 18px rise and fade, once. .kit-done releases transform for hover rules. */
+.kit-js [data-reveal]:not(.kit-done){opacity:0;transform:translateY(18px)}
+.kit-js [data-reveal].in:not(.kit-done){opacity:1;transform:none;
+  transition:opacity .6s ease var(--kit-d,0ms),transform .7s cubic-bezier(.2,.8,.2,1) var(--kit-d,0ms)}
+
+/* Lift and press. The strip under a lifted card keeps the pointer inside it (no hover flicker). */
+.kit-lift{position:relative;transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s ease,border-color .25s ease}
+.kit-lift::after{content:"";position:absolute;left:0;right:0;top:100%;height:6px}
+.kit-lift:hover{transform:translateY(-3px)}
+.kit-press{transition:transform .12s ease}
+.kit-press:active{transform:scale(.97)}
+
+[data-kit-nav] a[aria-current="true"]{color:var(--kit-ink)}
+:focus-visible{outline:2px solid var(--kit-ink);outline-offset:3px}
+
+@media (prefers-reduced-motion:reduce){
+  ::view-transition-old(root),::view-transition-new(root){animation:none!important}
+  .kit-js [data-reveal]{opacity:1!important;transform:none!important;transition:none!important}
+  .kit-lift:hover,.kit-press:active{transform:none}
+  [data-kit-theme] svg{transition:none}
+}
+@media print{
+  .kit-js [data-reveal]{opacity:1!important;transform:none!important}
+  .kit-top{position:static;backdrop-filter:none;-webkit-backdrop-filter:none}
+}
+</style>
+<script>
+(function(){var e=`1.3.26`;function t(e,t,n){return Math.max(e,Math.min(t,n))}function n(e,t,n){return(1-n)*e+n*t}function r(e,t,r,i){return n(e,t,1-Math.exp(-r*i))}function i(e,t){return(e%t+t)%t}var a=class{isRunning=!1;value=0;from=0;to=0;currentTime=0;lerp;duration;easing;onUpdate;advance(e){if(!this.isRunning)return;let n=!1;if(this.duration&&this.easing){this.currentTime+=e;let r=t(0,this.currentTime/this.duration,1);n=r>=1;let i=n?1:this.easing(r);this.value=this.from+(this.to-this.from)*i}else this.lerp?(this.value=r(this.value,this.to,this.lerp*60,e),Math.abs(this.value-this.to)<.02&&(this.value=this.to,n=!0)):(this.value=this.to,n=!0);n&&this.stop(),this.onUpdate?.(this.value,n)}stop(){this.isRunning=!1}fromTo(e,t,{lerp:n,duration:r,easing:i,onStart:a,onUpdate:o}){this.from=this.value=e,this.to=t,this.lerp=n,this.duration=r,this.easing=i,this.currentTime=0,this.isRunning=!0,a?.(),this.onUpdate=o}};function o(e,t){let n;return function(...r){clearTimeout(n),n=setTimeout(()=>{n=void 0,e.apply(this,r)},t)}}var s=class{width=0;height=0;scrollHeight=0;scrollWidth=0;debouncedResize;wrapperResizeObserver;contentResizeObserver;constructor(e,t,{autoResize:n=!0,debounce:r=250}={}){this.wrapper=e,this.content=t,n&&(this.debouncedResize=o(this.resize,r),this.wrapper instanceof Window?window.addEventListener(`resize`,this.debouncedResize):(this.wrapperResizeObserver=new ResizeObserver(this.debouncedResize),this.wrapperResizeObserver.observe(this.wrapper)),this.contentResizeObserver=new ResizeObserver(this.debouncedResize),this.contentResizeObserver.observe(this.content)),this.resize()}destroy(){this.wrapperResizeObserver?.disconnect(),this.contentResizeObserver?.disconnect(),this.wrapper===window&&this.debouncedResize&&window.removeEventListener(`resize`,this.debouncedResize)}resize=()=>{this.onWrapperResize(),this.onContentResize()};onWrapperResize=()=>{this.wrapper instanceof Window?(this.width=window.innerWidth,this.height=window.innerHeight):(this.width=this.wrapper.clientWidth,this.height=this.wrapper.clientHeight)};onContentResize=()=>{this.wrapper instanceof Window?(this.scrollHeight=this.content.scrollHeight,this.scrollWidth=this.content.scrollWidth):(this.scrollHeight=this.wrapper.scrollHeight,this.scrollWidth=this.wrapper.scrollWidth)};get limit(){return{x:this.scrollWidth-this.width,y:this.scrollHeight-this.height}}},c=class{events={};emit(e,...t){let n=this.events[e]||[];for(let e=0,r=n.length;e<r;e++)n[e]?.(...t)}on(e,t){return this.events[e]?this.events[e].push(t):this.events[e]=[t],()=>{this.events[e]=this.events[e]?.filter(e=>t!==e)}}off(e,t){this.events[e]=this.events[e]?.filter(e=>t!==e)}destroy(){this.events={}}};let l={passive:!1};function u(e,t){return e===1?16.666666666666668:e===2?t:1}var d=class{touchStart={x:0,y:0};lastDelta={x:0,y:0};window={width:0,height:0};emitter=new c;constructor(e,t={wheelMultiplier:1,touchMultiplier:1}){this.element=e,this.options=t,window.addEventListener(`resize`,this.onWindowResize),this.onWindowResize(),this.element.addEventListener(`wheel`,this.onWheel,l),this.element.addEventListener(`touchstart`,this.onTouchStart,l),this.element.addEventListener(`touchmove`,this.onTouchMove,l),this.element.addEventListener(`touchend`,this.onTouchEnd,l)}on(e,t){return this.emitter.on(e,t)}destroy(){this.emitter.destroy(),window.removeEventListener(`resize`,this.onWindowResize),this.element.removeEventListener(`wheel`,this.onWheel,l),this.element.removeEventListener(`touchstart`,this.onTouchStart,l),this.element.removeEventListener(`touchmove`,this.onTouchMove,l),this.element.removeEventListener(`touchend`,this.onTouchEnd,l)}onTouchStart=e=>{let{clientX:t,clientY:n}=e.targetTouches?e.targetTouches[0]:e;this.touchStart.x=t,this.touchStart.y=n,this.lastDelta={x:0,y:0},this.emitter.emit(`scroll`,{deltaX:0,deltaY:0,event:e})};onTouchMove=e=>{let{clientX:t,clientY:n}=e.targetTouches?e.targetTouches[0]:e,r=-(t-this.touchStart.x)*this.options.touchMultiplier,i=-(n-this.touchStart.y)*this.options.touchMultiplier;this.touchStart.x=t,this.touchStart.y=n,this.lastDelta={x:r,y:i},this.emitter.emit(`scroll`,{deltaX:r,deltaY:i,event:e})};onTouchEnd=e=>{this.emitter.emit(`scroll`,{deltaX:this.lastDelta.x,deltaY:this.lastDelta.y,event:e})};onWheel=e=>{let{deltaX:t,deltaY:n,deltaMode:r}=e,i=u(r,this.window.width),a=u(r,this.window.height);t*=i,n*=a,t*=this.options.wheelMultiplier,n*=this.options.wheelMultiplier,this.emitter.emit(`scroll`,{deltaX:t,deltaY:n,event:e})};onWindowResize=()=>{this.window={width:window.innerWidth,height:window.innerHeight}}};let f=e=>Math.min(1,1.001-2**(-10*e));var p=class{_isScrolling=!1;_isStopped=!1;_isLocked=!1;_preventNextNativeScrollEvent=!1;_resetVelocityTimeout=null;_rafId=null;_isDraggingSelection=!1;reducedMotionMediaQuery=window.matchMedia(`(prefers-reduced-motion: reduce)`);isTouching;isIos;time=0;userData={};lastVelocity=0;velocity=0;direction=0;options;targetScroll;animatedScroll;animate=new a;emitter=new c;dimensions;virtualScroll;constructor({wrapper:t=window,content:n=document.documentElement,eventsTarget:r=t,smoothWheel:i=!0,syncTouch:a=!1,syncTouchLerp:o=.075,touchInertiaExponent:c=1.7,duration:l,easing:u,lerp:p=.1,infinite:m=!1,orientation:h=`vertical`,gestureOrientation:g=h===`horizontal`?`both`:`vertical`,touchMultiplier:_=1,wheelMultiplier:v=1,autoResize:y=!0,prevent:b,virtualScroll:x,overscroll:S=!0,autoRaf:C=!1,anchors:w=!1,autoToggle:T=!1,allowNestedScroll:E=!1,__experimental__naiveDimensions:D=!1,naiveDimensions:O=D,stopInertiaOnNavigate:k=!1,respectReducedMotion:A=!0}={}){window.lenisVersion=e,window.lenis||(window.lenis={}),window.lenis.version=e,h===`horizontal`&&(window.lenis.horizontal=!0),a===!0&&(window.lenis.touch=!0),this.isIos=/(iPad|iPhone|iPod)/g.test(navigator.userAgent),(!t||t===document.documentElement)&&(t=window),typeof l==`number`&&typeof u!=`function`?u=f:typeof u==`function`&&typeof l!=`number`&&(l=1),this.options={wrapper:t,content:n,eventsTarget:r,smoothWheel:i,syncTouch:a,syncTouchLerp:o,touchInertiaExponent:c,duration:l,easing:u,lerp:p,infinite:m,gestureOrientation:g,orientation:h,touchMultiplier:_,wheelMultiplier:v,autoResize:y,prevent:b,virtualScroll:x,overscroll:S,autoRaf:C,anchors:w,autoToggle:T,allowNestedScroll:E,naiveDimensions:O,stopInertiaOnNavigate:k,respectReducedMotion:A},this.dimensions=new s(t,n,{autoResize:y}),this.updateClassName(),this.targetScroll=this.animatedScroll=this.actualScroll,this.options.wrapper.addEventListener(`scroll`,this.onNativeScroll),this.options.wrapper.addEventListener(`scrollend`,this.onScrollEnd,{capture:!0}),(this.options.anchors||this.options.stopInertiaOnNavigate)&&this.options.wrapper.addEventListener(`click`,this.onClick),this.options.wrapper.addEventListener(`pointerdown`,this.onPointerDown),this.virtualScroll=new d(r,{touchMultiplier:_,wheelMultiplier:v}),this.virtualScroll.on(`scroll`,this.onVirtualScroll),this.options.autoToggle&&(this.checkOverflow(),this.rootElement.addEventListener(`transitionend`,this.onTransitionEnd)),this.options.autoRaf&&(this._rafId=requestAnimationFrame(this.raf))}destroy(){this.emitter.destroy(),this.options.wrapper.removeEventListener(`scroll`,this.onNativeScroll),this.options.wrapper.removeEventListener(`scrollend`,this.onScrollEnd,{capture:!0}),this.options.wrapper.removeEventListener(`pointerdown`,this.onPointerDown),(this.options.anchors||this.options.stopInertiaOnNavigate)&&this.options.wrapper.removeEventListener(`click`,this.onClick),this.virtualScroll.destroy(),this.dimensions.destroy(),this.cleanUpClassName(),this._rafId&&cancelAnimationFrame(this._rafId)}on(e,t){return this.emitter.on(e,t)}off(e,t){return this.emitter.off(e,t)}onScrollEnd=e=>{e instanceof CustomEvent||(this.isScrolling===`smooth`||this.isScrolling===!1)&&e.stopPropagation()};dispatchScrollendEvent=()=>{this.options.wrapper.dispatchEvent(new CustomEvent(`scrollend`,{bubbles:this.options.wrapper===window,detail:{lenisScrollEnd:!0}}))};get overflow(){let e=this.isHorizontal?`overflow-x`:`overflow-y`;return getComputedStyle(this.rootElement)[e]}checkOverflow(){[`hidden`,`clip`].includes(this.overflow)?this.internalStop():this.internalStart()}onTransitionEnd=e=>{e.propertyName?.includes(`overflow`)&&e.target===this.rootElement&&this.checkOverflow()};setScroll(e){this.isHorizontal?this.options.wrapper.scrollTo({left:e,behavior:`instant`}):this.options.wrapper.scrollTo({top:e,behavior:`instant`})}onClick=e=>{let t=e.composedPath().filter(e=>e instanceof HTMLAnchorElement&&e.href).map(e=>new URL(e.href)),n=new URL(window.location.href);if(this.options.anchors){let e=t.find(e=>n.host===e.host&&n.pathname===e.pathname&&e.hash);if(e){let t=typeof this.options.anchors==`object`&&this.options.anchors?this.options.anchors:void 0,n=decodeURIComponent(e.hash);this.scrollTo(n,t);return}}if(this.options.stopInertiaOnNavigate&&t.some(e=>n.host===e.host&&n.pathname!==e.pathname)){this.reset();return}};onPointerDown=e=>{e.button===1&&this.reset()};isTouchOnSelectionHandle(e){let t=window.getSelection();if(!t||t.isCollapsed||t.rangeCount===0)return!1;let n=e.targetTouches[0]??e.changedTouches[0];if(!n)return!1;let r=t.getRangeAt(0).getClientRects();if(r.length===0)return!1;let i=r[0],a=r[r.length-1],o=Math.hypot(n.clientX-i.left,n.clientY-i.top)<=40,s=Math.hypot(n.clientX-a.right,n.clientY-a.bottom)<=40;return o||s}onVirtualScroll=e=>{if(typeof this.options.virtualScroll==`function`&&this.options.virtualScroll(e)===!1)return;let{deltaX:t,deltaY:n,event:r}=e;if(this.emitter.emit(`virtual-scroll`,{deltaX:t,deltaY:n,event:r}),r.ctrlKey||r.lenisStopPropagation)return;let i=r.type.includes(`touch`),a=r.type.includes(`wheel`);if(i&&this.isIos&&(r.type===`touchstart`&&(this._isDraggingSelection=this.isTouchOnSelectionHandle(r)),this._isDraggingSelection)){r.type===`touchend`&&(this._isDraggingSelection=!1);return}this.isTouching=r.type===`touchstart`||r.type===`touchmove`;let o=t===0&&n===0;if(this.options.syncTouch&&i&&r.type===`touchstart`&&o&&!this.isStopped&&!this.isLocked){this.reset();return}let s=this.options.gestureOrientation===`vertical`&&n===0||this.options.gestureOrientation===`horizontal`&&t===0;if(o||s)return;let c=r.composedPath();c=c.slice(0,c.indexOf(this.rootElement));let l=this.options.prevent,u=Math.abs(t)>=Math.abs(n)?`horizontal`:`vertical`;if(c.find(e=>e instanceof HTMLElement&&(typeof l==`function`&&l?.(e)||e.hasAttribute?.(`data-lenis-prevent`)||u===`vertical`&&e.hasAttribute?.(`data-lenis-prevent-vertical`)||u===`horizontal`&&e.hasAttribute?.(`data-lenis-prevent-horizontal`)||i&&e.hasAttribute?.(`data-lenis-prevent-touch`)||a&&e.hasAttribute?.(`data-lenis-prevent-wheel`)||this.options.allowNestedScroll&&this.hasNestedScroll(e,{deltaX:t,deltaY:n}))))return;if(this.isStopped||this.isLocked){r.cancelable&&r.preventDefault();return}if(!(this.options.syncTouch&&i||this.options.smoothWheel&&a)){this.isScrolling=`native`,this.animate.stop(),r.lenisStopPropagation=!0;return}let d=n;this.options.gestureOrientation===`both`?d=Math.abs(n)>Math.abs(t)?n:t:this.options.gestureOrientation===`horizontal`&&(d=t),(!this.options.overscroll||this.options.infinite||this.options.wrapper!==window&&this.limit>0&&(this.animatedScroll>0&&this.animatedScroll<this.limit||this.animatedScroll===0&&n>0||this.animatedScroll===this.limit&&n<0))&&(r.lenisStopPropagation=!0),r.cancelable&&r.preventDefault();let f=i&&this.options.syncTouch,p=i&&r.type===`touchend`;p&&(d=Math.sign(d)*Math.abs(this.velocity)**this.options.touchInertiaExponent),this.scrollTo(this.targetScroll+d,{programmatic:!1,...f?{lerp:p?this.options.syncTouchLerp:1}:{lerp:this.options.lerp,duration:this.options.duration,easing:this.options.easing}})};resize(){this.dimensions.resize(),this.animatedScroll=this.targetScroll=this.actualScroll,this.emit()}emit(){this.emitter.emit(`scroll`,this)}onNativeScroll=()=>{if(this._resetVelocityTimeout!==null&&(clearTimeout(this._resetVelocityTimeout),this._resetVelocityTimeout=null),this._preventNextNativeScrollEvent){this._preventNextNativeScrollEvent=!1;return}if(this.isScrolling===!1||this.isScrolling===`native`){let e=this.animatedScroll;this.animatedScroll=this.targetScroll=this.actualScroll,this.lastVelocity=this.velocity,this.velocity=this.animatedScroll-e,this.direction=Math.sign(this.animatedScroll-e),this.isStopped||(this.isScrolling=`native`),this.emit(),this.velocity!==0&&(this._resetVelocityTimeout=setTimeout(()=>{this.lastVelocity=this.velocity,this.velocity=0,this.isScrolling=!1,this.emit()},400))}};reset(){this.isLocked=!1,this.isScrolling=!1,this.animatedScroll=this.targetScroll=this.actualScroll,this.lastVelocity=this.velocity=0,this.animate.stop()}start(){if(this.isStopped){if(this.options.autoToggle){this.rootElement.style.removeProperty(`overflow`);return}this.internalStart()}}internalStart(){this.isStopped&&(this.reset(),this.isStopped=!1,this.emit())}stop(){if(!this.isStopped){if(this.options.autoToggle){this.rootElement.style.setProperty(`overflow`,`clip`);return}this.internalStop()}}internalStop(){this.isStopped||(this.reset(),this.isStopped=!0,this.emit())}raf=e=>{let t=e-(this.time||e);this.time=e,this.animate.advance(t*.001),this.options.autoRaf&&(this._rafId=requestAnimationFrame(this.raf))};scrollTo(e,{offset:n=0,immediate:r=!1,lock:i=!1,programmatic:a=!0,lerp:o=a?this.options.lerp:void 0,duration:s=a?this.options.duration:void 0,easing:c=a?this.options.easing:void 0,onStart:l,onComplete:u,force:d=!1,userData:p}={}){if(this.prefersReducedMotion&&(a?r=!0:(o=1,s=void 0,c=void 0)),(this.isStopped||this.isLocked)&&!d)return;let m=e,h=n;if(typeof m==`string`&&[`top`,`left`,`start`,`#`].includes(m))m=0;else if(typeof m==`string`&&[`bottom`,`right`,`end`].includes(m))m=this.limit;else{let e=null;if(typeof m==`string`?(e=m.startsWith(`#`)?document.getElementById(m.slice(1)):document.querySelector(m),e||(m===`#top`?m=0:console.warn(`Lenis: Target not found`,m))):m instanceof HTMLElement&&m?.nodeType&&(e=m),e){if(this.options.wrapper!==window){let e=this.rootElement.getBoundingClientRect();h-=this.isHorizontal?e.left:e.top}let t=e.getBoundingClientRect(),n=getComputedStyle(e),r=this.isHorizontal?Number.parseFloat(n.scrollMarginLeft):Number.parseFloat(n.scrollMarginTop),i=getComputedStyle(this.rootElement),a=this.isHorizontal?Number.parseFloat(i.scrollPaddingLeft):Number.parseFloat(i.scrollPaddingTop);m=(this.isHorizontal?t.left:t.top)+this.animatedScroll-(Number.isNaN(r)?0:r)-(Number.isNaN(a)?0:a)}}if(typeof m==`number`){if(m+=h,this.options.infinite){if(a){this.targetScroll=this.animatedScroll=this.scroll;let e=m-this.animatedScroll;e>this.limit/2?m-=this.limit:e<-this.limit/2&&(m+=this.limit)}}else m=t(0,m,this.limit);if(m===this.targetScroll){l?.(this),u?.(this);return}if(this.userData=p??{},r){this.animatedScroll=this.targetScroll=m,this.setScroll(this.scroll),this.reset(),this.preventNextNativeScrollEvent(),this.emit(),u?.(this),this.userData={},requestAnimationFrame(()=>{this.dispatchScrollendEvent()});return}a||(this.targetScroll=m),typeof s==`number`&&typeof c!=`function`?c=f:typeof c==`function`&&typeof s!=`number`&&(s=1),this.animate.fromTo(this.animatedScroll,m,{duration:s,easing:c,lerp:o,onStart:()=>{i&&(this.isLocked=!0),this.isScrolling=`smooth`,l?.(this)},onUpdate:(e,t)=>{this.isScrolling=`smooth`,this.lastVelocity=this.velocity,this.velocity=e-this.animatedScroll,this.direction=Math.sign(this.velocity),this.animatedScroll=e,this.setScroll(this.scroll),a&&(this.targetScroll=e),t||this.emit(),t&&(this.reset(),this.emit(),u?.(this),this.userData={},requestAnimationFrame(()=>{this.dispatchScrollendEvent()}),this.preventNextNativeScrollEvent())}})}}preventNextNativeScrollEvent(){this._preventNextNativeScrollEvent=!0,requestAnimationFrame(()=>{this._preventNextNativeScrollEvent=!1})}hasNestedScroll(e,{deltaX:t,deltaY:n}){let r=Date.now();e._lenis||={};let i=e._lenis,a,o,s,c,l,u,d,f,p,m;if(r-(i.time??0)>2e3){i.time=Date.now();let t=window.getComputedStyle(e);if(i.computedStyle=t,a=[`auto`,`overlay`,`scroll`].includes(t.overflowX),o=[`auto`,`overlay`,`scroll`].includes(t.overflowY),l=[`auto`].includes(t.overscrollBehaviorX),u=[`auto`].includes(t.overscrollBehaviorY),i.hasOverflowX=a,i.hasOverflowY=o,!(a||o))return!1;d=e.scrollWidth,f=e.scrollHeight,p=e.clientWidth,m=e.clientHeight,s=d>p,c=f>m,i.isScrollableX=s,i.isScrollableY=c,i.scrollWidth=d,i.scrollHeight=f,i.clientWidth=p,i.clientHeight=m,i.hasOverscrollBehaviorX=l,i.hasOverscrollBehaviorY=u}else s=i.isScrollableX,c=i.isScrollableY,a=i.hasOverflowX,o=i.hasOverflowY,d=i.scrollWidth,f=i.scrollHeight,p=i.clientWidth,m=i.clientHeight,l=i.hasOverscrollBehaviorX,u=i.hasOverscrollBehaviorY;if(!(a&&s||o&&c))return!1;let h=Math.abs(t)>=Math.abs(n)?`horizontal`:`vertical`,g,_,v,y,b,x;if(h===`horizontal`)g=Math.round(e.scrollLeft),_=d-p,v=t,y=a,b=s,x=l;else if(h===`vertical`)g=Math.round(e.scrollTop),_=f-m,v=n,y=o,b=c,x=u;else return!1;return!x&&(g>=_||g<=0)?!0:(v>0?g<_:g>0)&&y&&b}get rootElement(){return this.options.wrapper===window?document.documentElement:this.options.wrapper}get limit(){return this.options.naiveDimensions?this.isHorizontal?this.rootElement.scrollWidth-this.rootElement.clientWidth:this.rootElement.scrollHeight-this.rootElement.clientHeight:this.dimensions.limit[this.isHorizontal?`x`:`y`]}get isHorizontal(){return this.options.orientation===`horizontal`}get actualScroll(){let e=this.options.wrapper;return this.isHorizontal?e.scrollX??e.scrollLeft:e.scrollY??e.scrollTop}get scroll(){return this.options.infinite?i(this.animatedScroll,this.limit):this.animatedScroll}get progress(){return this.limit===0?1:this.scroll/this.limit}get isScrolling(){return this._isScrolling}set isScrolling(e){this._isScrolling!==e&&(this._isScrolling=e,this.updateClassName())}get isStopped(){return this._isStopped}set isStopped(e){this._isStopped!==e&&(this._isStopped=e,this.updateClassName())}get isLocked(){return this._isLocked}set isLocked(e){this._isLocked!==e&&(this._isLocked=e,this.updateClassName())}get isSmooth(){return this.isScrolling===`smooth`}get prefersReducedMotion(){return this.options.respectReducedMotion&&this.reducedMotionMediaQuery.matches}get className(){let e=`lenis`;return this.options.autoToggle&&(e+=` lenis-autoToggle`),this.isStopped&&(e+=` lenis-stopped`),this.isLocked&&(e+=` lenis-locked`),this.isScrolling&&(e+=` lenis-scrolling`),this.isScrolling===`smooth`&&(e+=` lenis-smooth`),e}updateClassName(){this.cleanUpClassName(),this.className.split(` `).forEach(e=>{this.rootElement.classList.add(e)})}cleanUpClassName(){for(let e of Array.from(this.rootElement.classList))(e===`lenis`||e.startsWith(`lenis-`))&&this.rootElement.classList.remove(e)}};globalThis.Lenis=p,globalThis.Lenis.prototype=p.prototype})();
+</script>
+<script>
+/* web-studio site kit v1 (19 Oct 2026). Behaviour ported from the Editorial Monochrome
+   reference page: theme toggle with a circular reveal, Lenis glide with the idle loop and the
+   "fresh" wake fix, goTo() with the top-bar offset, progress line, active nav, scroll reveals
+   with an 80ms stagger. Load it in <head> right after lenis.min.js (build_page.py does this).
+
+   Hooks (all optional):
+     [data-kit-theme]     button that flips light and dark
+     [data-kit-bar]       the fixed top bar; gets .is-scrolled after 8px
+     [data-kit-progress]  2px line inside the bar; scaled to read progress
+     [data-kit-nav] a     in-page links; the current one gets aria-current="true"
+     [data-reveal]        rises 18px and fades in once, when it enters
+     [data-stagger]       its children reveal one after another, 80ms apart
+     main[data-kit-glide] gets the sub-pixel glide transform (keep fixed elements outside it)
+   Options: set window.KIT = { themeVT:false, defaultTheme:'light', lerp:0.07, offset:84 }
+   before this script. Riso Poster uses themeVT:false (instant switch, no glass). */
+(function () {
+  var de = document.documentElement;
+  var cfg = { themeVT: true, defaultTheme: null, lerp: 0.07, offset: 84, key: 'theme' };
+  var o = window.KIT || {};
+  for (var k in o) cfg[k] = o[k];
+  var RM = matchMedia('(prefers-reduced-motion: reduce)');
+  var DARK = matchMedia('(prefers-color-scheme: dark)');
+
+  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function save(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+  /* Theme goes on before first paint, so there is no flash. */
+  var saved = load(cfg.key);
+  if (saved === 'light' || saved === 'dark') de.setAttribute('data-theme', saved);
+  else if (cfg.defaultTheme) de.setAttribute('data-theme', cfg.defaultTheme);
+  de.classList.add('kit-js');
+
+  function current() { return de.getAttribute('data-theme') || (DARK.matches ? 'dark' : 'light'); }
+
+  function vt(kind, fn) {
+    if (!document.startViewTransition || RM.matches || document.hidden) { fn(); return; }
+    de.classList.add('vt-' + kind);
+    var t = document.startViewTransition(fn);
+    t.finished.finally(function () { de.classList.remove('vt-' + kind); });
+  }
+
+  function labelThemeButtons() {
+    var d = current() === 'dark';
+    document.querySelectorAll('[data-kit-theme]').forEach(function (b) {
+      b.setAttribute('aria-label', d ? 'Switch to light theme' : 'Switch to dark theme');
+      b.setAttribute('aria-pressed', d ? 'true' : 'false');
+    });
+  }
+
+  function toggleTheme(btn) {
+    var next = current() === 'dark' ? 'light' : 'dark';
+    var apply = function () { de.setAttribute('data-theme', next); save(cfg.key, next); labelThemeButtons(); };
+    if (!cfg.themeVT) { apply(); return; }
+    var r = btn.getBoundingClientRect();
+    de.style.setProperty('--vx', (r.left + r.width / 2) + 'px');
+    de.style.setProperty('--vy', (r.top + r.height / 2) + 'px');
+    vt('theme', apply);
+  }
+
+  /* Lenis: the loop runs only while a glide is moving and sleeps after three still frames.
+     wake() sets fresh so the first frame after a pause is one ordinary 60 Hz step. */
+  var lenis = null, loopOn = false, idle = 0, fresh = false, MAIN = null;
+  function loop(t) {
+    if (!lenis) { loopOn = false; return; }
+    if (fresh) { lenis.time = t - 1000 / 60; fresh = false; }
+    lenis.raf(t);
+    if (lenis.isScrolling) idle = 0; else idle++;
+    if (idle < 3) requestAnimationFrame(loop); else loopOn = false;
+  }
+  function wake() { if (!loopOn && lenis) { loopOn = true; idle = 0; fresh = true; requestAnimationFrame(loop); } }
+
+  function initSmooth() {
+    if (RM.matches || typeof window.Lenis === 'undefined') return;
+    lenis = new window.Lenis({ lerp: cfg.lerp, wheelMultiplier: 1, smoothWheel: true, syncTouch: false, autoRaf: false, anchors: false });
+    lenis.on('virtual-scroll', wake);
+    MAIN = document.querySelector('main[data-kit-glide]');
+    if (MAIN) lenis.on('scroll', function () {
+      var d = window.scrollY - lenis.animatedScroll;
+      MAIN.style.transform = Math.abs(d) > 0.004 ? 'translate3d(0,' + d.toFixed(3) + 'px,0)' : '';
+    });
+    de.classList.add('kit-smooth');
+  }
+
+  function goTo(el, instant) {
+    var y = el === 'top' ? 0 : Math.max(0, el.getBoundingClientRect().top + window.scrollY - cfg.offset);
+    if (lenis) { wake(); lenis.scrollTo(y, { immediate: !!instant, duration: 1.1, easing: function (t) { return 1 - Math.pow(1 - t, 4); } }); }
+    else window.scrollTo({ top: y, behavior: instant || RM.matches ? 'auto' : 'smooth' });
+    if (el !== 'top') {
+      if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '-1');
+      el.focus({ preventScroll: true });
+    }
+  }
+
+  function initLinks() {
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="#"]');
+      if (!a || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey) return;
+      var id = a.getAttribute('href').slice(1);
+      var el = id ? document.getElementById(id) : 'top';
+      if (!el) return;
+      e.preventDefault();
+      goTo(el);
+      try { history.replaceState(null, '', id ? '#' + id : location.pathname + location.search); } catch (err) {}
+    });
+  }
+
+  /* One scroll handler, batched into a frame: bar state, progress, active nav. */
+  var bar, prog, navLinks = [], targets = [], ticking = false;
+  function tick() {
+    ticking = false;
+    var y = window.scrollY, max = document.documentElement.scrollHeight - window.innerHeight;
+    if (bar) bar.classList.toggle('is-scrolled', y > 8);
+    if (prog) prog.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, y / max) : 0).toFixed(4) + ')';
+    if (targets.length) {
+      var line = cfg.offset + window.innerHeight * 0.3, on = -1;
+      for (var i = 0; i < targets.length; i++) if (targets[i].getBoundingClientRect().top <= line) on = i;
+      if (y >= max - 2) on = targets.length - 1;
+      navLinks.forEach(function (a, i) { if (i === on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+    }
+  }
+  function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(tick); } }
+
+  function initScroll() {
+    bar = document.querySelector('[data-kit-bar]');
+    prog = document.querySelector('[data-kit-progress]');
+    document.querySelectorAll('[data-kit-nav] a[href^="#"]').forEach(function (a) {
+      var t = document.getElementById(a.getAttribute('href').slice(1));
+      if (t) { navLinks.push(a); targets.push(t); }
+    });
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    tick();
+  }
+
+  /* Reveals. Hidden state lives in CSS under html.kit-js, so the page reads fine without JS.
+     Items already on screen at load animate in at once (the hero stagger); the rest wait for
+     the observer. After the reveal ends, .kit-done hands transform back to hover rules. */
+  function initReveal() {
+    document.querySelectorAll('[data-stagger]').forEach(function (p) {
+      Array.prototype.forEach.call(p.children, function (c, i) {
+        if (!c.hasAttribute('data-reveal')) c.setAttribute('data-reveal', '');
+        c.style.setProperty('--kit-d', (i * 80) + 'ms');
+      });
+    });
+    /* .reveal is the class Riso Poster and Editorial Monochrome style themselves. */
+    var els = Array.prototype.slice.call(document.querySelectorAll('[data-reveal], .reveal'));
+    if (RM.matches || !('IntersectionObserver' in window)) { els.forEach(function (el) { el.classList.add('in', 'kit-done'); }); return; }
+    function show(el) {
+      el.classList.add('in');
+      var d = parseFloat(getComputedStyle(el).getPropertyValue('--kit-d')) || 0;
+      setTimeout(function () { el.classList.add('kit-done'); }, d + 800);
+    }
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (en) { if (en.isIntersecting) { show(en.target); io.unobserve(en.target); } });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    var fold = window.innerHeight * 0.92;
+    requestAnimationFrame(function () { requestAnimationFrame(function () {
+      els.forEach(function (el) { if (el.getBoundingClientRect().top < fold) show(el); else io.observe(el); });
+    }); });
+  }
+
+  function init() {
+    try {
+      labelThemeButtons();
+      document.querySelectorAll('[data-kit-theme]').forEach(function (b) {
+        b.addEventListener('click', function () { toggleTheme(b); });
+      });
+      DARK.addEventListener('change', labelThemeButtons);
+      initSmooth();
+      initLinks();
+      initScroll();
+      initReveal();
+      if (location.hash) { var h = document.getElementById(location.hash.slice(1)); if (h) setTimeout(function () { goTo(h, true); }, 0); }
+    } catch (err) {
+      de.classList.remove('kit-js');
+      if (window.console) console.error('site kit:', err);
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+
+  window.kit = { goTo: goTo, toggleTheme: toggleTheme, get lenis() { return lenis; } };
+})();
+</script>
+<!-- studio:end -->
+<style>
+/* PeerLens, direction D "warm study rail": the app sits on a cream sheet over a peach desk,
+   a marigold rail docks to the sheet's right edge, ink black carries every action, cards are
+   flat white with no lines, and each person is a pastel rounded square. The rail and pastel
+   blocks stay light in dark mode, like paper under a desk lamp. */
+:root{
+  --top:4rem; --gut:3.5rem; --railw:clamp(27.5rem,24vw,36rem);
+  --canvas:#FFF8EE; --card:#FFFFFF;
+  --ink:#141414; --body:#4A433C; --muted:#6B6259; --line:#F0E4D2; --quiet:#E3D6C2;
+  --rail:#FAD47A; --mark:#B42346;
+  --p-mint:#C6F0EA; --p-pink:#FFD6E0; --p-butter:#FFF1C9; --p-lilac:#DCD3FF; --p-sky:#D6E6FF;
+  --lift-shadow:0 1.375rem 2.5rem -1.625rem rgba(120,80,30,.45);
+  --sans:'Urbanist',ui-sans-serif,system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --canvas:#1B1714; --card:#26211D;
+  --ink:#F7EFE3; --body:#D6CABB; --muted:#AB9C8D; --line:#3A322B; --quiet:#4D443B;
+  --rail:#EDBE52; --mark:#FF92A8;
+  --p-mint:#B9E6DF; --p-pink:#F4C9D3; --p-butter:#F3E4B5; --p-lilac:#D0C6F7; --p-sky:#C8DBF7;
+  --lift-shadow:0 1.375rem 2.5rem -1.625rem rgba(0,0,0,.7);
+}}
+:root[data-theme="dark"]{
+  --canvas:#1B1714; --card:#26211D;
+  --ink:#F7EFE3; --body:#D6CABB; --muted:#AB9C8D; --line:#3A322B; --quiet:#4D443B;
+  --rail:#EDBE52; --mark:#FF92A8;
+  --p-mint:#B9E6DF; --p-pink:#F4C9D3; --p-butter:#F3E4B5; --p-lilac:#D0C6F7; --p-sky:#C8DBF7;
+  --lift-shadow:0 1.375rem 2.5rem -1.625rem rgba(0,0,0,.7);
+}
+/* Light islands: the rail and pastel blocks keep paper colours in both themes. */
+.pg-rail{--canvas:#FFF8EE;--card:#FFFFFF;--ink:#141414;--body:#4A433C;--muted:#574C43;--line:#F0E4D2;--quiet:#E3CFA8;--mark:#B42346;color:var(--body)}
+.is-you{--tile:var(--ink);--tile-ink:var(--canvas)}
+.is-lilac{--tile:var(--p-lilac)}.is-mint{--tile:var(--p-mint)}.is-sky{--tile:var(--p-sky)}
+.is-butter{--tile:var(--p-butter)}.is-pink{--tile:var(--p-pink)}
+
+*,*::before,*::after{box-sizing:border-box}
+/* Text stays at its normal size on every screen. The page grows to 1920px wide, then sits centred. */
+html{font-size:100%;overflow-x:clip;background:var(--canvas)}
+body{margin:0;background:var(--canvas);color:var(--body);font:500 1.03125rem/1.55 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:clip;transition:background-color .3s ease}
+img{max-width:100%;display:block}
+a{color:var(--mark);text-underline-offset:.1875rem;text-decoration-thickness:.09375rem}
+h1,h2,h3{font-family:var(--sans);font-weight:800;color:var(--ink);margin:0;letter-spacing:-.02em;text-wrap:balance}
+h1{font-size:clamp(2rem,3.6vw,3.125rem);line-height:1.06}
+h2{font-size:clamp(1.375rem,2vw,1.625rem);line-height:1.12}
+h3{font-size:1.125rem;line-height:1.25;letter-spacing:-.01em}
+p{margin:0}
+button,input{font:inherit}
+[tabindex="-1"]:focus{outline:none}
+.pg-nw{white-space:nowrap}
+.pg-sr{position:absolute;width:.0625rem;height:.0625rem;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.pg-skip{position:fixed;left:1rem;top:-5rem;z-index:90;background:var(--ink);color:var(--canvas);padding:.625rem 1rem;border-radius:62.4375rem;font-weight:700;text-decoration:none}
+.pg-skip:focus{top:.75rem}
+
+/* The sheet */
+.pg-sheet{max-width:120rem;margin:0 auto;background:var(--canvas);overflow:clip;transition:background-color .3s ease}
+
+/* Floating glass bar, a pill inside the sheet */
+/* At rest it floats as a pill; once you scroll it docks to the top edge and, like the rail,
+   rounds only its free corners. */
+.kit-top{inset:.625rem auto auto 50%;width:calc(min(120rem,100%) - 3rem);transform:translateX(-50%);border:0;border-radius:2rem;
+  box-shadow:0 0 0 .0625rem color-mix(in srgb,var(--ink) 7%,transparent);transition:top .35s cubic-bezier(.2,.8,.2,1),border-radius .35s ease,box-shadow .3s ease}
+.kit-top.is-scrolled{top:0;border-radius:0 0 1.75rem 1.75rem;box-shadow:0 0 0 .0625rem color-mix(in srgb,var(--ink) 7%,transparent),0 1rem 2rem -1.25rem rgba(0,0,0,.3)}
+.kit-progress{left:2.5rem;right:2.5rem;bottom:-.0625rem;border-radius:.125rem}
+.pg-bar{display:flex;align-items:center;gap:.75rem;width:100%;padding:0 .625rem 0 1.375rem}
+.pg-brand{display:inline-flex;align-items:center;gap:.625rem;min-height:2.5rem;text-decoration:none;color:var(--ink);font-weight:800;font-size:1.375rem;letter-spacing:-.01em}
+.pg-lens{width:1.5rem;height:1.5rem;border-radius:50%;border:.3125rem solid var(--ink);position:relative;flex:none;margin-right:.25rem}
+.pg-lens::after{content:"";position:absolute;right:-.5rem;bottom:-.5rem;width:.625rem;height:.625rem;border-radius:50%;background:#F5B93E}
+.pg-proto{font-size:.75rem;font-weight:700;color:var(--ink);padding:.3125rem .75rem;border-radius:62.4375rem;background:var(--card)}
+.pg-nav{display:flex;gap:.25rem;margin-left:auto}
+.pg-nav a{display:inline-flex;align-items:center;height:2.75rem;padding:0 1.0625rem;border-radius:62.4375rem;color:var(--muted);text-decoration:none;font-weight:700;font-size:.9375rem;transition:color .2s,background-color .2s}
+.pg-nav a:hover{color:var(--ink)}
+.pg-nav a[aria-current="page"]{background:var(--rail);color:#141414}
+.pg-icon{width:2.75rem;height:2.75rem;border-radius:50%;border:0;background:var(--card);color:var(--ink);display:grid;place-items:center;cursor:pointer;list-style:none;flex:none}
+.pg-icon::-webkit-details-marker{display:none}
+.pg-icon svg{width:1.1875rem;height:1.1875rem}
+.pg-menu{position:relative;display:none}
+.pg-menu__panel{position:absolute;right:0;top:3.375rem;width:16.25rem;background:var(--card);border-radius:1.5rem;box-shadow:var(--lift-shadow),0 0 0 .0625rem color-mix(in srgb,var(--ink) 6%,transparent);padding:.5rem;display:flex;flex-direction:column}
+.pg-menu__panel a{padding:.75rem .875rem;border-radius:.875rem;color:var(--ink);text-decoration:none;font-weight:700;font-size:.9375rem}
+.pg-menu__panel a:hover,.pg-menu__panel a[aria-current="page"]{background:var(--rail);color:#141414}
+.pg-menu__panel hr{border:0;border-top:.0625rem solid var(--line);margin:.375rem .625rem}
+
+/* Type helpers, pills, buttons */
+.pg-kick{font-size:.9375rem;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.pg-lede{font-size:clamp(1.0625rem,1.4vw,1.1875rem);line-height:1.55;color:var(--body);max-width:56ch}
+.pg-fine{font-size:.875rem;color:var(--muted)}
+.pg-id{display:inline-flex;align-items:center;height:1.375rem;padding:0 .5625rem;border-radius:62.4375rem;font-size:.71875rem;font-weight:800;letter-spacing:.03em;
+  background:color-mix(in srgb,var(--ink) 9%,transparent);color:var(--ink)}
+.pg-sample{display:inline-flex;align-items:center;height:1.625rem;padding:0 .75rem;border-radius:62.4375rem;background:var(--card);color:var(--ink);font-size:.75rem;font-weight:700;
+  box-shadow:inset 0 0 0 .0625rem var(--line)}
+.pg-btn{display:inline-flex;align-items:center;justify-content:center;gap:.625rem;min-height:3.25rem;padding:0 1.625rem;border-radius:62.4375rem;border:0;
+  font:700 1rem/1 var(--sans);text-decoration:none;cursor:pointer;transition:background-color .2s ease,color .2s ease,box-shadow .2s ease}
+.pg-btn svg{width:1.125rem;height:1.125rem;flex:none}
+.pg-btn--ink{background:var(--ink);color:var(--canvas)}
+.pg-btn--ink:hover{background:color-mix(in srgb,var(--ink) 84%,var(--canvas))}
+.pg-btn--rail{background:var(--rail);color:#141414}
+.pg-btn--rail:hover{background:color-mix(in srgb,var(--rail) 86%,#141414)}
+.pg-btn--plain{background:var(--card);color:var(--ink);box-shadow:inset 0 0 0 .09375rem var(--line)}
+.pg-btn--plain:hover{box-shadow:inset 0 0 0 .09375rem var(--ink)}
+.pg-btn--cream{background:var(--canvas);color:var(--ink)}
+.pg-btn:disabled{opacity:.4;cursor:not-allowed}
+.pg-actions{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}
+.pg-av{width:2.625rem;height:2.625rem;border-radius:.75rem;display:inline-grid;place-items:center;flex:none;font-weight:800;font-size:1rem;
+  background:var(--tile,var(--p-butter));color:var(--tile-ink,#141414)}
+.pg-avs{display:flex;padding-left:.5rem}
+.pg-avs .pg-av{width:2.25rem;height:2.25rem;border-radius:50%;font-size:.875rem;margin-left:-.5rem;box-shadow:0 0 0 .15625rem var(--canvas)}
+.pg-dot{width:1.75rem;height:1.75rem;border-radius:50%;background:var(--tile);flex:none}
+.pg-sq{width:3rem;height:3rem;border-radius:.875rem;display:grid;place-items:center;background:var(--tile);color:#141414;flex:none}
+.pg-sq svg{width:1.4375rem;height:1.4375rem}
+
+/* Screens and the rail layout */
+.pg-screen{padding:calc(var(--top) + 3.75rem) 0 4rem}
+.pg-screen[hidden]{display:none}
+.pg-layout{display:grid;grid-template-columns:minmax(0,1fr) var(--railw);column-gap:3.5rem;align-items:stretch}
+.pg-main{padding-left:var(--gut);min-width:0;display:flex;flex-direction:column;gap:1.625rem}
+.pg-rail{background:var(--rail);border-radius:2.25rem 0 0 2.25rem;padding:1.75rem 1.75rem 2rem;min-width:0}
+.pg-rail__in{display:flex;flex-direction:column;gap:.875rem}
+.pg-rail--sticky .pg-rail__in{position:sticky;top:calc(var(--top) + 3.25rem)}
+.pg-railhead{display:flex;align-items:baseline;justify-content:space-between;gap:.75rem;flex-wrap:wrap;margin-top:.25rem}
+.pg-railhead h2{font-size:1.3125rem}
+.pg-wrap{padding:0 var(--gut)}
+.pg-sec{padding-top:5.5rem}
+.pg-sec__head{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.625rem;max-width:47.5rem}
+.pg-sec__head h2{font-size:clamp(1.625rem,2.6vw,2.25rem)}
+.pg-card{background:var(--card);border-radius:1.625rem}
+.pg-cream{background:var(--canvas);border-radius:1.5rem;padding:.5rem .5rem 1rem}
+.pg-pic{border-radius:1.125rem;overflow:hidden;background:var(--p-pink)}
+.pg-pic img{width:100%;height:100%;object-fit:cover}
+.pg-cream__foot{display:flex;align-items:baseline;justify-content:space-between;gap:.625rem;padding:.75rem .625rem 0}
+.pg-big{font-size:1.75rem;font-weight:800;letter-spacing:-.01em;color:var(--ink);line-height:1.1}
+.pg-row{background:var(--card);border-radius:1.125rem;padding:.625rem .875rem .625rem .625rem;display:flex;align-items:center;gap:.75rem}
+.pg-row b{color:var(--ink);font-size:.9375rem}
+.pg-row small{display:block;font-size:.75rem;color:var(--muted);font-weight:600;line-height:1.3}
+
+/* Journey trail */
+.pg-trail{list-style:none;margin:0;padding:0;display:flex;gap:.25rem;flex-wrap:wrap}
+.pg-trail a{display:inline-flex;align-items:center;gap:.5rem;height:2.5rem;padding:0 .9375rem 0 .4375rem;border-radius:62.4375rem;text-decoration:none;color:var(--muted);font-size:.875rem;font-weight:700;transition:background-color .2s}
+.pg-trail a:hover{background:color-mix(in srgb,var(--ink) 6%,transparent)}
+.pg-trail__dot{width:1.625rem;height:1.625rem;border-radius:50%;display:grid;place-items:center;font-size:.75rem;font-weight:800;background:color-mix(in srgb,var(--ink) 8%,transparent)}
+.pg-trail__dot svg{width:.875rem;height:.875rem}
+.pg-trail .is-done .pg-trail__dot{background:var(--p-mint);color:#141414}
+.pg-trail .is-now a{background:var(--ink);color:var(--canvas)}
+.pg-trail .is-now .pg-trail__dot{background:var(--rail);color:#141414}
+
+/* Voice ribbons: D's level meters stretched into one track per person */
+.pg-ribbon{display:flex;align-items:center;gap:.1875rem;height:1.875rem;overflow:hidden;flex:1;min-width:0}
+.pg-ribbon i{flex:0 0 .1875rem;height:100%;border-radius:.1875rem;background:var(--quiet);transform:scaleY(.14);transition:transform .17s ease-out,background-color .25s ease}
+.pg-ribbon.is-on i,.is-speaking .pg-ribbon i{background:var(--ink)}
+
+/* Home */
+.pg-hero{justify-content:center;gap:1.5rem;padding-right:.5rem}
+.pg-hero h1{font-size:clamp(2.375rem,4.3vw,4rem);line-height:1.03;letter-spacing:-.03em}
+.pg-hero__pic{aspect-ratio:1400/933}
+.pg-voices{display:flex;flex-direction:column;gap:.5rem}
+.pg-voices .pg-row{padding:.5rem .875rem .5rem .5rem}
+.pg-voices .pg-av{width:2.25rem;height:2.25rem;border-radius:.6875rem;font-size:.875rem}
+.pg-voices .pg-ribbon{height:1.375rem;gap:.125rem}
+.pg-voices .pg-ribbon i{flex-basis:.15625rem}
+.pg-who{min-width:5.25rem;line-height:1.25}
+.pg-flow{list-style:none;margin:0;padding:.375rem;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.pg-flow li{padding:1.625rem 1.5rem 1.5rem;display:flex;flex-direction:column;gap:.75rem;border-radius:1.375rem;transition:background-color .2s ease}
+.pg-flow li+li{border-left:.125rem dashed var(--line);border-radius:0}
+.pg-flow p{font-size:.96875rem}
+.pg-ids{display:flex;flex-wrap:wrap;gap:.375rem;margin-top:auto;padding-top:.25rem}
+.pg-rules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.125rem}
+.pg-rule{padding:1.625rem 1.75rem 1.75rem;display:flex;flex-direction:column;gap:.75rem}
+.pg-rule__h{display:flex;align-items:center;gap:.625rem;font-weight:800;font-size:1rem;color:var(--ink)}
+.pg-state{font-size:clamp(1.375rem,2vw,1.6875rem);line-height:1.15;font-weight:800;letter-spacing:-.015em;color:var(--ink)}
+.pg-rule p:last-child{font-size:.96875rem}
+.pg-inkcard{background:var(--ink);color:var(--canvas);border-radius:1.875rem;padding:2.125rem 2.375rem;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1.75rem;align-items:center;position:relative}
+.pg-inkcard h2{color:var(--canvas);font-size:clamp(1.5rem,2.4vw,2rem);max-width:24ch}
+.pg-inkcard p{color:color-mix(in srgb,var(--canvas) 78%,transparent);margin-top:.625rem;max-width:62ch}
+.pg-inkcard .pg-inkcard__for{display:inline-block;margin:0 0 .625rem;padding:.25rem .75rem;border-radius:62.4375rem;font-size:.8125rem;font-weight:700;background:var(--rail);color:#141414}
+
+/* Invite */
+.pg-ticket{padding:2.125rem 2.5rem 2rem;display:flex;flex-direction:column;gap:1.375rem;overflow:hidden}
+.pg-ticket h1{font-size:clamp(1.875rem,3.2vw,2.75rem)}
+.pg-tear{position:relative;border-top:.125rem dashed var(--line);margin:.125rem -2.5rem}
+.pg-tear::before,.pg-tear::after{content:"";position:absolute;top:-1rem;width:1.875rem;height:1.875rem;border-radius:50%;background:var(--canvas)}
+.pg-tear::before{left:-.9375rem}.pg-tear::after{right:-.9375rem}
+.pg-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.875rem;margin:0}
+.pg-meta div{display:flex;flex-direction:column;gap:.125rem}
+.pg-meta dt{font-size:.8125rem;font-weight:700;color:var(--muted)}
+.pg-meta dd{margin:0;font-weight:800;color:var(--ink);font-size:1.125rem}
+.pg-seats{display:flex;align-items:center;gap:.875rem;flex-wrap:wrap}
+.pg-seat{width:2.25rem;height:2.25rem;border-radius:50%;border:.125rem dashed var(--ink);display:grid;place-items:center;color:var(--ink);font-weight:800;margin-left:-.5rem;background:var(--card)}
+.pg-checks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.625rem}
+.pg-checks li{display:flex;gap:.75rem;align-items:center;color:var(--body)}
+.pg-checks .pg-sq{width:2rem;height:2rem;border-radius:.625rem}
+.pg-checks .pg-sq svg{width:1.0625rem;height:1.0625rem}
+.pg-pack{position:relative;height:26.875rem;margin-top:.375rem}
+.pg-pack__card{position:absolute;left:.25rem;right:.25rem;border-radius:1.375rem;padding:1.375rem 1.5rem;color:#141414;background:var(--tile);box-shadow:0 1rem 1.875rem -1.375rem rgba(0,0,0,.3)}
+.pg-pack__card h3{font-size:1.0625rem;color:#141414}
+.pg-pack__card p{font-size:.875rem;color:#4A433C;margin-top:.25rem}
+.pg-pack__card:nth-child(1){top:0;transform:rotate(-3deg)}
+.pg-pack__card:nth-child(2){top:7.25rem;transform:rotate(2deg)}
+.pg-pack__card:nth-child(3){top:18.25rem;transform:rotate(-1.5deg)}
+.pg-bars{display:flex;align-items:flex-end;gap:.625rem;margin-top:.75rem}
+.pg-bars span{display:flex;flex-direction:column;align-items:center;gap:.25rem;width:2.875rem}
+.pg-bars i{display:block;width:100%;border-radius:.5rem .5rem .1875rem .1875rem;background:#141414;color:#FFF8EE;font:800 .75rem/1 var(--sans);font-style:normal;padding-top:.375rem;text-align:center}
+.pg-bars em{font-style:normal;font-size:.71875rem;font-weight:800;color:#4A433C}
+.pg-bars small{font-size:.75rem;font-weight:700;color:#4A433C;align-self:flex-end;padding-bottom:1.375rem}
+
+/* Forms */
+.pg-form{padding:2.125rem 2.375rem;display:flex;flex-direction:column;gap:1.375rem}
+.pg-form h1{font-size:clamp(1.875rem,3.2vw,2.75rem)}
+.pg-facts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.625rem}
+.pg-fact{display:grid;grid-template-columns:3rem minmax(0,1fr);gap:.875rem;align-items:start;padding:1rem 1.125rem 1rem .875rem;border-radius:1.25rem;background:var(--canvas)}
+.pg-fact strong{display:block;color:var(--ink);font-size:.96875rem;font-weight:800}
+.pg-agree{display:flex;gap:.875rem;align-items:center;padding:1.125rem;border-radius:1.25rem;background:var(--canvas);cursor:pointer}
+.pg-agree input{width:1.5rem;height:1.5rem;margin:0;accent-color:var(--ink);flex:none;cursor:pointer}
+.pg-agree span{font-weight:700;color:var(--ink)}
+.pg-field{display:flex;flex-direction:column;gap:.5rem}
+.pg-field label,.pg-legend{font-weight:800;color:var(--ink);font-size:.9375rem}
+.pg-input{height:3.625rem;border-radius:1.125rem;border:0;background:var(--canvas);color:var(--ink);padding:0 1.25rem;font-size:1.125rem;font-weight:700;width:100%;box-shadow:inset 0 0 0 .09375rem var(--line)}
+.pg-input::placeholder{color:var(--muted);font-weight:500}
+.pg-input:focus{outline:none;box-shadow:inset 0 0 0 .125rem var(--ink)}
+.pg-mic{padding:1.375rem;display:flex;flex-direction:column;gap:1rem}
+.pg-mic .pg-ribbon{flex:none;height:4.5rem;gap:.25rem}
+.pg-mic .pg-ribbon i{flex-basis:.25rem}
+.pg-toggle{display:flex;align-items:center;gap:.75rem;font-weight:800;color:#141414;cursor:pointer;padding:.25rem .125rem}
+.pg-toggle input{width:1.375rem;height:1.375rem;accent-color:#141414}
+
+/* Room */
+.pg-roomhead{display:flex;flex-direction:column;gap:.5rem}
+.pg-tabs{display:flex;gap:.375rem;flex-wrap:wrap}
+.pg-tabs button{height:2.75rem;padding:0 1.25rem;border-radius:62.4375rem;border:0;background:transparent;color:var(--muted);font:700 .9375rem var(--sans);cursor:pointer}
+.pg-tabs button:hover{color:var(--ink)}
+.pg-tabs button[aria-selected="true"]{background:var(--rail);color:#141414}
+.pg-casebody h2{font-size:clamp(1.75rem,2.8vw,2.375rem);line-height:1.08;margin-bottom:.875rem;max-width:22ch}
+.pg-casebody>p{max-width:64ch;font-size:1.0625rem;color:var(--body)}
+.pg-casebody>p+p{margin-top:.75rem}
+.pg-task{margin-top:1.25rem;padding:1.125rem 1.25rem;border-radius:1.25rem;background:var(--p-butter);color:#141414;max-width:64ch}
+.pg-task strong{font-weight:800}
+.pg-fig{margin:0;padding:1.375rem 1.625rem;border-radius:1.625rem;background:var(--card)}
+.pg-fig figcaption{display:flex;align-items:center;gap:.625rem;font-weight:800;font-size:1.0625rem;color:var(--ink);margin-bottom:.375rem}
+.pg-fig figcaption span{width:1.625rem;height:1.625rem;border-radius:.5rem;background:var(--tile);flex:none}
+.pg-table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:1rem}
+.pg-table th{font-size:.8125rem;font-weight:700;color:var(--muted);text-align:right;padding:.75rem 0;border-bottom:.0625rem solid var(--line)}
+.pg-table td{padding:.75rem 0;border-bottom:.0625rem solid var(--line);text-align:right;color:var(--ink);font-weight:800}
+.pg-table th:first-child,.pg-table td:first-child{text-align:left;font-weight:500;color:var(--body)}
+.pg-table th:first-child{font-weight:700;color:var(--muted)}
+.pg-table tr:last-child td{border-bottom:0}
+.pg-tablebox{overflow-x:auto}
+.pg-status{display:flex;align-items:center;gap:.5625rem;font-size:.875rem;font-weight:700;color:var(--ink);padding:.75rem .625rem 0}
+.pg-status::before{content:"";width:.5625rem;height:.5625rem;border-radius:50%;background:var(--mark);animation:pgPulse 1.6s ease-in-out infinite;flex:none}
+@keyframes pgPulse{50%{opacity:.25}}
+.pg-lanes{display:flex;flex-direction:column;gap:.5rem}
+.pg-row{transition:box-shadow .2s ease}
+.pg-row.is-speaking{box-shadow:inset 0 0 0 .125rem var(--ink)}
+.pg-lane__state{transition:color .2s}
+.is-speaking .pg-lane__state{color:var(--mark);font-weight:800}
+.pg-controls{display:grid;grid-template-columns:1fr 1fr;gap:.625rem;margin-top:.25rem}
+.pg-controls .pg-btn--ink{grid-column:1/-1}
+
+/* Processing */
+.pg-psteps{list-style:none;margin:0;padding:.625rem;display:flex;flex-direction:column;gap:.125rem}
+.pg-psteps li{display:grid;grid-template-columns:2.5rem minmax(0,1fr);gap:.875rem;align-items:center;padding:.75rem .875rem;border-radius:1.125rem;color:var(--muted);transition:color .3s ease,background-color .3s ease}
+.pg-psteps strong{display:block;color:inherit;font-weight:800;font-size:1.03125rem}
+.pg-ps__ic{width:2.5rem;height:2.5rem;border-radius:.75rem;display:grid;place-items:center;background:color-mix(in srgb,var(--ink) 6%,transparent);transition:background-color .3s}
+.pg-ps__ic svg{width:1.125rem;height:1.125rem;opacity:0;color:#141414}
+.pg-psteps li.is-run{color:var(--ink);background:var(--canvas)}
+.pg-psteps li.is-run .pg-ps__ic{background:var(--rail);animation:pgBreathe 1s ease-in-out infinite}
+.pg-psteps li.is-done{color:var(--ink)}
+.pg-psteps li.is-done .pg-ps__ic{background:var(--p-mint)}
+.pg-psteps li.is-done .pg-ps__ic svg{opacity:1}
+@keyframes pgBreathe{50%{transform:scale(.88)}}
+.pg-procvis{padding:1.125rem 1.125rem 1.25rem;display:flex;flex-direction:column;gap:.75rem}
+.pg-procvis__label{font-size:.8125rem;font-weight:800;color:var(--muted);padding:0 .25rem}
+.pg-tracklist{display:flex;flex-direction:column;gap:.5rem}
+.pg-tracklist div{display:flex;align-items:center;gap:.625rem}
+.pg-tracklist .pg-av,.pg-plines .pg-av{width:1.75rem;height:1.75rem;border-radius:.5625rem;font-size:.75rem}
+.pg-tracklist .pg-ribbon{height:1.375rem;gap:.125rem}
+.pg-tracklist .pg-ribbon i{flex-basis:.15625rem}
+.pg-down{display:grid;place-items:center;color:var(--muted)}
+.pg-down svg{width:1.625rem;height:1.625rem}
+.pg-plines{display:flex;flex-direction:column;gap:.4375rem}
+.pg-pline{display:grid;grid-template-columns:1.75rem minmax(0,1fr);gap:.625rem;align-items:center;opacity:0;transform:translateX(-.625rem);transition:opacity .4s ease,transform .5s cubic-bezier(.2,.8,.2,1)}
+.pg-pline span{height:.75rem;border-radius:.375rem;background:var(--tile)}
+.pg-pline .is-you-bar{background:#141414}
+#proc[data-stage="2"] .pg-pline,#proc[data-stage="3"] .pg-pline,#proc[data-stage="4"] .pg-pline{opacity:1;transform:none}
+.pg-pline:nth-child(2){transition-delay:.08s}.pg-pline:nth-child(3){transition-delay:.16s}.pg-pline:nth-child(4){transition-delay:.24s}
+.pg-pline:nth-child(5){transition-delay:.32s}.pg-pline:nth-child(6){transition-delay:.4s}
+.pg-pnote{display:flex;gap:.75rem;align-items:center;padding:.75rem .875rem;border-radius:1.125rem;background:var(--card);opacity:0;transform:translateY(.5rem);transition:opacity .45s ease,transform .5s cubic-bezier(.2,.8,.2,1)}
+.pg-pnote b{color:var(--ink)}
+#proc[data-stage="3"] .pg-pnote,#proc[data-stage="4"] .pg-pnote{opacity:1;transform:none}
+
+/* Transcript */
+.pg-tlist{list-style:none;margin:0;padding:.625rem;display:flex;flex-direction:column;gap:.125rem}
+.pg-line{display:grid;grid-template-columns:3.625rem 9.375rem minmax(0,1fr);gap:.875rem;align-items:start;padding:.875rem 1rem;border-radius:1.125rem;transition:background-color .3s ease}
+.pg-line:hover{background:color-mix(in srgb,var(--ink) 4%,transparent)}
+.pg-line[hidden]{display:none}
+.pg-time{font-size:.84375rem;font-weight:800;color:var(--muted);padding-top:.25rem;font-variant-numeric:tabular-nums}
+.pg-speaker{display:flex;align-items:center;gap:.625rem;font-weight:800;color:var(--ink);font-size:.9375rem;min-width:0}
+.pg-speaker .pg-av{width:1.875rem;height:1.875rem;border-radius:.5625rem;font-size:.78125rem}
+.pg-say{color:var(--ink);font-size:1.03125rem;line-height:1.55;font-weight:500}
+.pg-line.is-mine{background:color-mix(in srgb,var(--ink) 5%,transparent)}
+.pg-line.is-hit{background:var(--rail);animation:pgHit 2.4s ease}
+.pg-line.is-hit .pg-say,.pg-line.is-hit .pg-speaker,.pg-line.is-hit .pg-time,.pg-line.is-hit a{color:#141414}
+@keyframes pgHit{0%{box-shadow:0 0 0 0 #141414}20%{box-shadow:0 0 0 .1875rem #141414}100%{box-shadow:0 0 0 0 transparent}}
+.pg-quoted{display:inline-flex;align-items:center;min-height:2rem;margin-top:.25rem;font-size:.84375rem;font-weight:800}
+.pg-line.is-none .pg-say{color:var(--muted);font-style:italic}
+.pg-line.is-none{box-shadow:inset 0 0 0 .09375rem var(--line)}
+.pg-none-sq{width:1.875rem;height:1.875rem;border-radius:.5625rem;border:.125rem dashed var(--muted);flex:none}
+.pg-filters{display:flex;flex-direction:column;gap:.5rem}
+.pg-filters button{display:flex;align-items:center;gap:.75rem;min-height:3.625rem;padding:.5rem 1rem .5rem .5rem;border-radius:1.125rem;border:0;background:var(--card);color:var(--ink);
+  font:800 .9375rem var(--sans);text-align:left;cursor:pointer;transition:box-shadow .2s ease}
+.pg-filters button:hover{box-shadow:inset 0 0 0 .09375rem var(--quiet)}
+.pg-filters button[aria-pressed="true"]{box-shadow:inset 0 0 0 .125rem #141414}
+.pg-filters .pg-av{width:2.5rem;height:2.5rem}
+.pg-fname{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pg-count{margin-left:auto;font-size:.8125rem;font-weight:700;color:var(--muted);white-space:nowrap}
+.pg-fl-short{display:none}
+.pg-allsq{background:#FFF8EE;box-shadow:inset 0 0 0 .125rem #141414}
+.pg-allsq i{width:.875rem;height:.875rem;border-radius:50%;border:.21875rem solid #141414}
+.pg-dashed{padding:.875rem 1rem;border-radius:1.125rem;border:.09375rem dashed color-mix(in srgb,#141414 35%,transparent);font-size:.875rem;color:#4A433C}
+
+/* Report */
+.pg-people{display:flex;align-items:center;gap:.875rem;flex-wrap:wrap;font-weight:700;color:var(--ink)}
+.pg-twin{display:grid;grid-template-columns:1fr 1fr;gap:1.125rem}
+.pg-twin .pg-card{padding:1.625rem}
+.pg-twin__h{display:flex;align-items:center;gap:.625rem;font-weight:800;font-size:1.0625rem;color:var(--ink)}
+.pg-twin .pg-card p{margin-top:.875rem;font-size:1.1875rem;line-height:1.45;font-weight:600;color:var(--ink)}
+.pg-timeline{padding:1.625rem 1.75rem 1.375rem}
+.pg-tl__head{display:flex;justify-content:space-between;align-items:baseline;gap:.75rem;flex-wrap:wrap}
+.pg-tl{position:relative;height:3.5rem;border-radius:1rem;background:repeating-linear-gradient(90deg,var(--line) 0 .125rem,transparent .125rem .625rem);margin-top:2.75rem}
+.pg-tl__seg{position:absolute;top:.5rem;bottom:.5rem;border-radius:.375rem;background:var(--ink);min-width:.3125rem}
+.pg-tl__pin{position:absolute;top:-1.875rem;transform:translateX(-50%);width:2rem;height:2rem;border-radius:50%;display:grid;place-items:center;
+  font-weight:800;font-size:.8125rem;background:var(--rail);color:#141414;text-decoration:none;box-shadow:0 0 0 .1875rem var(--card)}
+.pg-tl__pin:hover{background:var(--ink);color:var(--canvas)}
+.pg-tl__axis{display:flex;justify-content:space-between;margin-top:.5rem;font-size:.78125rem;font-weight:700;color:var(--muted)}
+.pg-howmade{padding:1.5rem 1.625rem;display:grid;grid-template-columns:auto minmax(0,1fr);gap:1rem;align-items:start}
+.pg-howmade p+p{margin-top:.5rem}
+.pg-moment{background:var(--card);border-radius:1.375rem;padding:.875rem;display:flex;flex-direction:column;gap:.625rem;scroll-margin-top:8.125rem}
+.pg-moment__q{border-radius:1rem;padding:1.125rem 1.125rem 1.25rem;background:var(--tile)}
+.pg-moment__q blockquote{margin:0;font-size:1.125rem;line-height:1.38;font-weight:700;color:#141414}
+.pg-moment__row{display:flex;align-items:center;gap:.75rem;padding:.125rem .25rem 0}
+.pg-moment__row p{font-size:.84375rem;line-height:1.4;color:#3D3731}
+.pg-moment__row b{color:#141414}
+.pg-go{width:2.625rem;height:2.625rem;border-radius:.75rem;display:grid;place-items:center;flex:none;background:var(--tile);color:#141414;transition:background-color .2s}
+.pg-go:hover{background:#141414;color:#FFF8EE}
+.pg-go svg{width:1.125rem;height:1.125rem}
+.pg-moment__foot{display:flex;justify-content:space-between;align-items:center;padding:0 .25rem .125rem;font-size:.8125rem;font-weight:800;color:var(--muted)}
+.pg-moment__foot b{color:#141414;font-size:.875rem}
+
+/* Legal */
+.pg-doc{padding:2.375rem 2.625rem;display:flex;flex-direction:column;gap:1.875rem}
+.pg-doc h1{font-size:clamp(1.875rem,3.2vw,2.75rem)}
+.pg-doc section{display:flex;flex-direction:column;gap:.625rem;scroll-margin-top:8.125rem}
+.pg-doc ol,.pg-doc ul{margin:0;padding-left:1.25rem;display:flex;flex-direction:column;gap:.625rem}
+.pg-doc li strong{color:var(--ink)}
+.pg-keep{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem}
+.pg-keep div{padding:1.125rem 1.25rem;border-radius:1.25rem;background:var(--tile)}
+.pg-keep b{display:block;font-size:2rem;font-weight:800;color:#141414;letter-spacing:-.02em}
+.pg-keep span{font-size:.875rem;color:#4A433C;font-weight:700}
+.pg-radio{display:flex;flex-wrap:wrap;gap:.5rem}
+.pg-radio label{display:inline-flex;align-items:center;gap:.5rem;height:2.875rem;padding:0 1rem;border-radius:62.4375rem;background:var(--canvas);font-weight:700;color:var(--ink);cursor:pointer}
+.pg-radio input{accent-color:var(--ink);width:1.125rem;height:1.125rem}
+.pg-done{padding:1rem 1.125rem;border-radius:1.125rem;background:var(--p-mint);color:#141414;font-weight:700}
+.pg-cookietable td,.pg-cookietable th{text-align:left!important}
+.pg-contact{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.pg-contact>div{padding:1.25rem 1.375rem;border-radius:1.375rem;background:var(--canvas);display:flex;flex-direction:column;gap:.5rem}
+.pg-contact h2{display:flex;align-items:center;gap:.625rem;font-size:1.125rem;line-height:1.25;letter-spacing:-.01em}
+.pg-contact .pg-dot{width:1.375rem;height:1.375rem}
+.pg-note{padding:1rem 1.125rem;border-radius:1.125rem;border:.09375rem dashed var(--line);color:var(--muted);font-size:.90625rem}
+.pg-legalnav{display:flex;flex-direction:column;gap:.5rem}
+.pg-legalnav a{display:flex;align-items:center;gap:.75rem;min-height:3.5rem;padding:.5rem .875rem .5rem .5rem;border-radius:1.125rem;background:var(--card);color:#141414;text-decoration:none;font-weight:800;font-size:.9375rem}
+.pg-legalnav a[aria-current="page"]{background:#141414;color:#FFF8EE}
+.pg-legalnav .pg-av{width:2.5rem;height:2.5rem}
+.pg-legalpic{aspect-ratio:4/3;padding:.5rem}
+
+/* Feature map */
+.pg-fmap{padding:.625rem}
+.pg-frow{display:grid;grid-template-columns:3.875rem minmax(0,1fr) 8rem auto;gap:1rem;align-items:center;padding:.875rem 1rem;border-radius:1.125rem}
+.pg-frow+.pg-frow{box-shadow:0 -.0625rem 0 var(--line)}
+.pg-frow:hover{background:color-mix(in srgb,var(--ink) 4%,transparent);box-shadow:none}
+.pg-frow h2{font-size:1.03125rem;line-height:1.25;letter-spacing:-.01em}
+.pg-frow p{font-size:.875rem;color:var(--muted)}
+.pg-ftype{font-size:.8125rem;font-weight:700;color:var(--muted)}
+.pg-frow a{display:inline-flex;align-items:center;min-height:2.5rem;font-weight:800;font-size:.875rem;white-space:nowrap}
+.pg-tally{display:grid;grid-template-columns:1fr 1fr;gap:.625rem}
+.pg-tally div{background:var(--card);border-radius:1.375rem;padding:1.125rem 1.125rem 1.25rem}
+.pg-tally b{display:block;font-size:2.75rem;font-weight:800;line-height:1;color:#141414;letter-spacing:-.03em}
+.pg-tally span{font-size:.875rem;font-weight:700;color:#4A433C}
+
+/* Footer and cookie bar */
+.pg-foot{margin:0 var(--gut);border-top:.0625rem solid var(--line);padding:1.875rem 0 2.375rem;display:flex;justify-content:space-between;gap:1.75rem;flex-wrap:wrap}
+.pg-foot p{font-size:.875rem;color:var(--muted);max-width:52ch;margin-top:.625rem}
+.pg-foot nav{display:flex;gap:.25rem 1.125rem;flex-wrap:wrap;max-width:33.75rem;align-content:flex-start}
+.pg-foot nav a,.pg-linkbtn{display:inline-flex;align-items:center;min-height:2.25rem;font-size:.875rem;font-weight:700;color:var(--ink);text-decoration:none;background:none;border:0;padding:0;cursor:pointer}
+.pg-foot nav a:hover,.pg-linkbtn:hover{color:var(--mark)}
+.pg-cookie{position:fixed;left:50%;bottom:1rem;transform:translateX(-50%);z-index:70;width:min(61.25rem,calc(100% - 2rem));background:var(--card);border-radius:1.625rem;
+  box-shadow:var(--lift-shadow),0 0 0 .0625rem color-mix(in srgb,var(--ink) 7%,transparent);padding:1rem 1.125rem 1rem 1.5rem;display:flex;align-items:center;gap:1.375rem}
+.pg-cookie[hidden]{display:none}
+.pg-cookie__text{flex:1;min-width:0}
+.pg-cookie h2{font-size:1rem;display:flex;align-items:center;gap:.5rem}
+.pg-cookie p{font-size:.875rem;margin-top:.125rem}
+.pg-cookie .pg-actions{gap:.5rem;flex:none;flex-wrap:nowrap}
+.pg-cookie .pg-btn{min-height:2.875rem;padding:0 1.25rem;font-size:.9375rem}
+
+.kit-lift:hover{box-shadow:var(--lift-shadow)}
+
+/* Past 1920 the page stops growing and sits centred, so the rail leaves the window edge:
+   round all its corners and inset it like the left column. */
+@media (min-width:1921px){
+  .pg-layout{padding-right:var(--gut)}
+  .pg-rail{border-radius:2.25rem}
+}
+@media (max-width:1180px){
+  :root{--gut:2.5rem;--railw:23.75rem}
+  .pg-layout{column-gap:2.5rem}
+  .pg-flow{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pg-flow li:nth-child(3){border-left:0}
+  .pg-flow li:nth-child(n+3){border-top:.125rem dashed var(--line)}
+}
+@media (max-width:1080px){
+  .pg-nav{display:none}.pg-menu{display:block;margin-left:auto}
+}
+@media (max-width:860px){
+  :root{--top:3.625rem;--gut:1rem}
+  html,body{background:var(--canvas)}
+  .kit-top{top:.625rem;width:calc(100% - 1.25rem)}
+  .kit-top.is-scrolled{top:0;border-radius:0 0 1.375rem 1.375rem}
+  .kit-progress{left:1.625rem;right:1.625rem}
+  .pg-bar{padding:0 .4375rem 0 1rem}
+  .pg-brand{font-size:1.25rem}
+  .pg-screen{padding:calc(var(--top) + 2.125rem) 0 3rem}
+  .pg-layout{grid-template-columns:minmax(0,1fr);row-gap:1.625rem}
+  .pg-main{padding:0 var(--gut);gap:1.375rem}
+  .pg-rail{border-radius:1.875rem;margin:0 .5rem;padding:1.25rem .875rem 1.375rem}
+  .pg-rail--sticky .pg-rail__in{position:static}
+  .pg-layout.rail-first .pg-rail{order:-1;margin:calc(-1 * (var(--top) + 2.125rem)) 0 0;border-radius:0 0 2rem 2rem;padding:calc(var(--top) + 1.875rem) 1rem 1.375rem}
+  .pg-sec{padding-top:4rem}
+  .pg-flow,.pg-rules,.pg-twin,.pg-contact,.pg-keep{grid-template-columns:minmax(0,1fr)}
+  .pg-flow li+li,.pg-flow li:nth-child(3){border-left:0;border-top:.125rem dashed var(--line)}
+  .pg-flow li{padding:1.375rem 1.125rem}
+  .pg-inkcard{grid-template-columns:minmax(0,1fr);padding:1.875rem 1.375rem 1.5rem}
+  .pg-ticket,.pg-form,.pg-doc{padding:1.625rem 1.25rem}
+  .pg-tear{margin:.125rem -1.25rem}
+  .pg-meta{grid-template-columns:1fr 1fr}
+  .pg-pack{height:25rem}
+  .pg-line{grid-template-columns:3.125rem minmax(0,1fr);gap:.25rem .625rem;padding:.75rem}
+  .pg-line .pg-say,.pg-line .pg-quoted{grid-column:2}
+  .pg-line>div{grid-column:2}
+  .pg-tlist{padding:.25rem}
+  .pg-filters{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:.25rem}
+  .pg-filters button{flex-direction:column;gap:.375rem;min-height:0;padding:.375rem 0 .5rem;background:transparent;font-size:.75rem;text-align:center;box-shadow:none}
+  .pg-filters button:hover{box-shadow:none}
+  .pg-filters button[aria-pressed="true"]{box-shadow:none}
+  .pg-filters button[aria-pressed="true"] .pg-av{box-shadow:0 0 0 .1875rem var(--rail),0 0 0 .3125rem #141414}
+  .pg-filters .pg-av{width:2.875rem;height:2.875rem;border-radius:.9375rem}
+  .pg-fname{max-width:100%}
+  .pg-count{display:none}
+  .pg-fl-long{display:none}.pg-fl-short{display:inline}
+  .pg-frow{grid-template-columns:3.5rem minmax(0,1fr);row-gap:.25rem}
+  .pg-frow .pg-ftype,.pg-frow a{grid-column:2}
+  .pg-timeline,.pg-howmade{padding:1.25rem 1rem}
+  .pg-howmade{grid-template-columns:minmax(0,1fr)}
+  .pg-cookie{flex-direction:column;align-items:stretch;gap:.75rem;padding:1rem 1.125rem}
+  .pg-cookie .pg-btn{flex:1}
+  .pg-legalpic{display:none}
+  .pg-legalnav{flex-direction:row;flex-wrap:wrap}
+  .pg-legalnav a{min-height:2.75rem;padding:0 1rem;border-radius:62.4375rem}
+  .pg-legalnav .pg-av{display:none}
+}
+@media (max-width:600px){
+  .pg-proto{display:none}
+  .pg-hero h1{font-size:clamp(2.125rem,10vw,2.625rem)}
+  .pg-cookie{bottom:.625rem;width:calc(100% - 1.25rem)}
+  .pg-tabs button{padding:0 .875rem}
+}
+@media (prefers-reduced-motion:reduce){
+  .pg-status::before,.pg-psteps li.is-run .pg-ps__ic,.pg-line.is-hit{animation:none}
+  .pg-ribbon i,.pg-pline,.pg-pnote,.kit-top{transition:none}
+}
+</style>
+</head>
+<body>
+<a class="pg-skip" href="#main">Skip to content</a>
+<header class="kit-top" data-kit-bar>
+  <div class="pg-bar">
+    <a class="pg-brand" href="#/" aria-label="PeerLens, back to the start"><span class="pg-lens" aria-hidden="true"></span>PeerLens</a>
+    <span class="pg-proto">Prototype · sample data</span>
+    <nav class="pg-nav" aria-label="Prototype screens">
+      <a href="#/invite" data-nav="/invite">Join</a>
+      <a href="#/room" data-nav="/room">Room</a>
+      <a href="#/report" data-nav="/report">Report</a>
+      <a href="#/transcript" data-nav="/transcript">Transcript</a>
+      <a href="#/features" data-nav="/features">Feature map</a>
+    </nav>
+    <details class="pg-menu">
+      <summary class="pg-icon" aria-label="Open the screen list">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+      </summary>
+      <div class="pg-menu__panel">
+        <a href="#/" data-nav="/">Start</a>
+        <a href="#/invite" data-nav="/invite">Invite and join</a>
+        <a href="#/room" data-nav="/room">Practice room</a>
+        <a href="#/report" data-nav="/report">Your report</a>
+        <a href="#/transcript" data-nav="/transcript">Transcript</a>
+        <hr>
+        <a href="#/privacy" data-nav="/privacy">Privacy and cookies</a>
+        <a href="#/terms" data-nav="/terms">Terms of use</a>
+        <a href="#/contact" data-nav="/contact">Company and grievance contact</a>
+        <a href="#/features" data-nav="/features">Feature map</a>
+      </div>
+    </details>
+    <button class="pg-icon kit-press" type="button" data-kit-theme aria-label="Switch theme">
+      <svg class="kit-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="kit-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.2M12 19.8V22M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M2 12h2.2M19.8 12H22M4.9 19.1l1.6-1.6M17.5 6.5l1.6-1.6"/></svg>
+    </button>
+  </div>
+  <div class="kit-progress" data-kit-progress></div>
+</header>
+
+<div class="pg-sheet">
+<main id="main" data-kit-glide>
+
+<!-- HOME -->
+<section class="pg-screen" data-route="/" data-title="PeerLens prototype" aria-labelledby="h-home">
+  <div class="pg-layout">
+    <div class="pg-main pg-hero" data-stagger>
+      <p class="pg-kick">A student concept you can click through</p>
+      <h1 id="h-home">Practise case GDs with your batch. Get feedback on your own words.</h1>
+      <p class="pg-lede">Four to six classmates join one room, read the same case and agree on one answer. Afterwards, each of you gets a private report that quotes what you said and when you said it.</p>
+      <div class="pg-actions">
+        <a class="pg-btn pg-btn--ink kit-press" href="#/invite">Open the sample invite
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="pg-btn pg-btn--rail kit-press" href="#/features">See the feature map</a>
+      </div>
+      <p class="pg-fine">Click through every screen. There's no sign-up, and everything here is sample data.</p>
+    </div>
+    <section class="pg-rail" aria-label="A practice room in progress" data-reveal>
+      <div class="pg-rail__in">
+        <div class="pg-cream">
+          <div class="pg-pic pg-hero__pic"><img src="assets/hero.webp" width="1400" height="933" alt="Five students around a study table in the evening, each with a laptop and headphones, listening while one of them speaks"></div>
+          <div class="pg-cream__foot"><span class="pg-big">Room KK-07</span><span class="pg-fine" style="font-weight:700">5 people · 30 min</span></div>
+        </div>
+        <div class="pg-railhead"><h2>At the table</h2></div>
+        <div class="pg-voices" aria-label="Each person has their own mic; Ananya is speaking">
+          <div class="pg-row is-you"><span class="pg-av" aria-hidden="true">Y</span><span class="pg-who"><b>You</b><small>mic on</small></span><span class="pg-ribbon" data-static=".35" data-seed="3" data-bars="58"></span></div>
+          <div class="pg-row is-lilac is-speaking"><span class="pg-av" aria-hidden="true">A</span><span class="pg-who"><b>Ananya</b><small class="pg-lane__state">speaking</small></span><span class="pg-ribbon" data-static=".95" data-seed="7" data-bars="58"></span></div>
+          <div class="pg-row is-mint"><span class="pg-av" aria-hidden="true">R</span><span class="pg-who"><b>Rohit</b><small>listening</small></span><span class="pg-ribbon" data-static=".2" data-seed="11" data-bars="58"></span></div>
+          <div class="pg-row is-sky"><span class="pg-av" aria-hidden="true">I</span><span class="pg-who"><b>Ishaan</b><small>listening</small></span><span class="pg-ribbon" data-static=".3" data-seed="19" data-bars="58"></span></div>
+          <div class="pg-row is-butter"><span class="pg-av" aria-hidden="true">M</span><span class="pg-who"><b>Meher</b><small>listening</small></span><span class="pg-ribbon" data-static=".15" data-seed="23" data-bars="58"></span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="pg-wrap pg-sec">
+    <div class="pg-sec__head" data-reveal>
+      <p class="pg-kick">How a session works</p>
+      <h2>From an invite link to your own report</h2>
+    </div>
+    <ol class="pg-card pg-flow" data-stagger>
+      <li class="is-lilac"><span class="pg-sq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></span>
+        <h3>Join with a link</h3><p>Open the invite, see what gets recorded, say yes, and pick the name others will see.</p>
+        <span class="pg-ids"><span class="pg-id">S1</span><span class="pg-id">CP1</span></span></li>
+      <li class="is-mint"><span class="pg-sq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h4"/></svg></span>
+        <h3>Read the same case</h3><p>Everyone reads the same case and exhibits, so you are all working on one problem.</p>
+        <span class="pg-ids"><span class="pg-id">CP2</span></span></li>
+      <li class="is-sky"><span class="pg-sq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" aria-hidden="true"><path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2"/></svg></span>
+        <h3>Talk on your own mic</h3><p>Each person's voice is recorded separately, so every line has one clear speaker.</p>
+        <span class="pg-ids"><span class="pg-id">CP3</span></span></li>
+      <li class="is-butter"><span class="pg-sq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 8h10M7 12h7"/><path d="M5 4h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-6l-5 4v-4H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg></span>
+        <h3>Get your own report</h3><p>First a transcript that shows who said what, then feedback that quotes your own lines with their times.</p>
+        <span class="pg-ids"><span class="pg-id">CP4</span><span class="pg-id">CP5</span><span class="pg-id">CE</span></span></li>
+    </ol>
+  </div>
+
+  <div class="pg-wrap pg-sec">
+    <div class="pg-sec__head" data-reveal>
+      <p class="pg-kick">Our promises</p>
+      <h2>Three things PeerLens always does</h2>
+    </div>
+    <div class="pg-rules" data-stagger>
+      <article class="pg-card pg-rule is-mint">
+        <span class="pg-rule__h"><span class="pg-dot" aria-hidden="true"></span>Proof</span>
+        <p class="pg-state">Every piece of feedback quotes something you said.</p>
+        <p>Each point shows your exact words and when you said them. If a line can't be traced to one person, it is left out.</p>
+      </article>
+      <article class="pg-card pg-rule is-sky">
+        <span class="pg-rule__h"><span class="pg-dot" aria-hidden="true"></span>Talk time</span>
+        <p class="pg-state">You see how long you spoke. There is no target.</p>
+        <p>It is there so you know, not to push you to talk more. Nobody gets hints during the discussion.</p>
+      </article>
+      <article class="pg-card pg-rule is-pink">
+        <span class="pg-rule__h"><span class="pg-dot" aria-hidden="true"></span>Privacy</span>
+        <p class="pg-state">Your report stays yours.</p>
+        <p>Recruiters never see it, and PeerLens does not score or rank anyone. It is practice feedback, just for you.</p>
+      </article>
+    </div>
+  </div>
+
+  <div class="pg-wrap pg-sec">
+    <div class="pg-inkcard" data-reveal>
+      <div>
+        <p class="pg-inkcard__for">For reviewers</p>
+        <h2>The six critical path features and the four statutory ones</h2>
+        <p>Features from our Kano survey get added once we know which ones fit the MVP.</p>
+      </div>
+      <a class="pg-btn pg-btn--rail kit-press" href="#/features">Open the feature map</a>
+    </div>
+  </div>
+</section>
+
+<!-- INVITE -->
+<section class="pg-screen" data-route="/invite" data-title="Your invite · PeerLens" aria-labelledby="h-invite" hidden>
+  <div class="pg-layout">
+    <div class="pg-main">
+      <div data-trail="1"></div>
+      <article class="pg-card pg-ticket" data-reveal>
+        <div class="pg-kick"><span class="pg-av is-lilac" aria-hidden="true" style="width:2.125rem;height:2.125rem;border-radius:.625rem;font-size:.875rem">A</span> Ananya invited you to a practice room <span class="pg-id">CP1</span></div>
+        <h1 id="h-invite">Kirana Konnect: expand to <span class="pg-nw">tier-2</span> cities or go deeper in metros?</h1>
+        <dl class="pg-meta">
+          <div><dt>When</dt><dd>Fri 23 Oct, 8:30 pm</dd></div>
+          <div><dt>Length</dt><dd>30 minutes</dd></div>
+          <div><dt>Room</dt><dd>KK-07</dd></div>
+        </dl>
+        <div class="pg-tear" aria-hidden="true"></div>
+        <div class="pg-seats">
+          <span class="pg-avs" aria-hidden="true"><span class="pg-av is-lilac">A</span><span class="pg-av is-mint">R</span><span class="pg-av is-sky">I</span><span class="pg-av is-butter">M</span><span class="pg-seat">+</span></span>
+          <span><strong style="color:var(--ink)">4 have joined.</strong> Rooms hold 4 to 6 people.</span>
+        </div>
+        <ul class="pg-checks">
+          <li class="is-mint"><span class="pg-sq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg></span>Your own laptop or phone</li>
+          <li class="is-mint"><span class="pg-sq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg></span>Headphones, so other voices don't leak into your mic</li>
+          <li class="is-mint"><span class="pg-sq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg></span>A quiet corner for 30 minutes</li>
+        </ul>
+        <div class="pg-actions">
+          <a class="pg-btn pg-btn--ink kit-press" href="#/consent">Continue to the room</a>
+          <span class="pg-fine">Next: what we record, then your name.</span>
+        </div>
+      </article>
+    </div>
+    <section class="pg-rail" aria-labelledby="h-pack" data-reveal>
+      <div class="pg-rail__in">
+        <div class="pg-railhead"><h2 id="h-pack">The case pack</h2></div>
+        <div class="pg-pack" role="img" aria-label="Three pages in the shared case pack: the brief, exhibit 1 on metro orders, and exhibit 2 on unit economics">
+          <div class="pg-pack__card is-mint"><h3>Case brief</h3><p>Everyone in the room reads the same pages.</p></div>
+          <div class="pg-pack__card is-lilac"><h3>Exhibit 1 · Metro orders by year</h3>
+            <div class="pg-bars" aria-hidden="true">
+              <span><i style="height:3.125rem">3.1</i><em>FY24</em></span>
+              <span><i style="height:3.9375rem">3.9</i><em>FY25</em></span>
+              <span><i style="height:4.375rem">4.3</i><em>FY26</em></span>
+              <small>crore orders</small>
+            </div></div>
+          <div class="pg-pack__card is-pink"><h3>Exhibit 2 · Unit economics by city tier</h3><p>Margin, orders per store, basket size and delivery cost, metro against tier-2.</p></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</section>
+
+<!-- CONSENT -->
+<section class="pg-screen" data-route="/consent" data-title="Recording consent · PeerLens" aria-labelledby="h-consent" hidden>
+  <div class="pg-layout rail-first">
+    <div class="pg-main">
+      <div data-trail="2"></div>
+      <div class="pg-card pg-form" data-reveal>
+        <p class="pg-kick">Before you join <span class="pg-id">S1</span></p>
+        <h1 id="h-consent">What we record, and why</h1>
+        <ul class="pg-facts">
+          <li class="pg-fact is-pink"><span class="pg-sq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
+            <div><strong>What</strong>Your voice during this session, and the transcript made from it.</div></li>
+          <li class="pg-fact is-sky"><span class="pg-sq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 8h10M7 12h7"/><path d="M5 4h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-6l-5 4v-4H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg></span>
+            <div><strong>Why</strong>So your feedback can quote what you actually said. Nothing else.</div></li>
+          <li class="pg-fact is-butter"><span class="pg-sq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+            <div><strong>How long</strong>Audio is deleted after 30 days, transcripts and reports after 180 days. You can ask for deletion sooner.</div></li>
+          <li class="pg-fact is-lilac"><span class="pg-sq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span>
+            <div><strong>Who sees it</strong>Only you see your report. Recruiters never do.</div></li>
+        </ul>
+        <label class="pg-agree" for="agree"><input type="checkbox" id="agree"><span>I agree to my voice being recorded for this session's feedback.</span></label>
+        <div class="pg-actions">
+          <button class="pg-btn pg-btn--ink" type="button" id="consentGo" data-go="#/join" disabled>Agree and continue</button>
+          <a class="pg-btn pg-btn--plain kit-press" href="#/">Not now</a>
+        </div>
+        <p class="pg-fine">India's data protection law (the DPDP Act, 2023) asks us to get your consent first. Read the full <a href="#/privacy">privacy and cookie notice</a>.</p>
+      </div>
+    </div>
+    <section class="pg-rail pg-rail--sticky" aria-label="About recording" data-reveal>
+      <div class="pg-rail__in">
+        <div class="pg-cream">
+          <div class="pg-pic" style="aspect-ratio:1/1"><img src="assets/consent.webp" width="800" height="800" alt="A student puts on headphones at her desk, next to a small microphone and a sheet with an empty tick box"></div>
+          <div class="pg-cream__foot"><span class="pg-big">Your voice</span><span class="pg-fine" style="font-weight:700">recorded only after you agree</span></div>
+        </div>
+        <div class="pg-dashed">You can leave the room at any time and ask for your data to be deleted from the privacy page.</div>
+      </div>
+    </section>
+  </div>
+</section>
+
+<!-- JOIN -->
+<section class="pg-screen" data-route="/join" data-title="Your name · PeerLens" aria-labelledby="h-join" hidden>
+  <div class="pg-layout">
+    <div class="pg-main">
+      <div data-trail="3"></div>
+      <form class="pg-card pg-form" id="joinForm" data-reveal>
+        <p class="pg-kick">Join room KK-07 <span class="pg-id">CP1</span></p>
+        <h1 id="h-join">What should the room call you?</h1>
+        <div class="pg-field">
+          <label for="name">Display name</label>
+          <input class="pg-input" id="name" name="name" type="text" maxlength="24" autocomplete="given-name" placeholder="Your first name">
+          <p class="pg-fine">Only people in this room see it. It is the only thing we ask for.</p>
+        </div>
+        <div class="pg-actions"><button class="pg-btn pg-btn--ink kit-press" type="submit">Join the room</button></div>
+      </form>
+    </div>
+    <section class="pg-rail pg-rail--sticky" aria-labelledby="h-mic" data-reveal>
+      <div class="pg-rail__in">
+        <div class="pg-railhead"><h2 id="h-mic">Mic check <span class="pg-id">CP3</span></h2></div>
+        <div class="pg-card pg-mic">
+          <p style="font-weight:800;color:#141414;font-size:1.0625rem">Say a few words. The bars should move.</p>
+          <div class="pg-ribbon is-on" id="micRibbon" data-bars="64"></div>
+        </div>
+        <label class="pg-toggle"><input type="checkbox" checked> Headphones on</label>
+        <p style="font-size:.9375rem">Headphones stop other voices getting into your mic, so every line in the transcript belongs to the right person.</p>
+      </div>
+    </section>
+  </div>
+</section>
+
+<!-- ROOM -->
+<section class="pg-screen" data-route="/room" data-title="Practice room · PeerLens" aria-labelledby="h-room" hidden>
+  <div class="pg-layout rail-first">
+    <div class="pg-main">
+      <div data-trail="4"></div>
+      <div class="pg-roomhead" data-reveal>
+        <p class="pg-kick">Room KK-07 <span aria-hidden="true">·</span> joined as <span data-you-name>You</span> <span class="pg-sample">Sample data</span></p>
+        <h1 id="h-room" class="pg-sr">The practice room</h1>
+        <div class="pg-tabs" role="tablist" aria-label="Shared case pack">
+          <button type="button" role="tab" id="tab-brief" aria-controls="pane-brief" aria-selected="true">The case</button>
+          <button type="button" role="tab" id="tab-ex1" aria-controls="pane-ex1" aria-selected="false" tabindex="-1">Exhibit 1</button>
+          <button type="button" role="tab" id="tab-ex2" aria-controls="pane-ex2" aria-selected="false" tabindex="-1">Exhibit 2</button>
+        </div>
+      </div>
+      <div class="pg-casebody" role="tabpanel" id="pane-brief" aria-labelledby="tab-brief" data-reveal>
+        <h2>Kirana Konnect: expand to <span class="pg-nw">tier-2</span> cities or go deeper in metros?</h2>
+        <p>Kirana Konnect delivers groceries in under 20 minutes from 140 dark stores across six metro cities. For the last six months it has also run one pilot store in Indore.</p>
+        <p>Metro order growth has slowed, and the board has money for one big push next year. It can open dark stores in tier-2 cities, or stay in the metros and add stores and categories there.</p>
+        <div class="pg-task"><strong>Your group's task:</strong> agree on one recommendation, and say what would change your mind.</div>
+        <p class="pg-fine" style="margin-top:1rem">Shared case pack <span class="pg-id">CP2</span>: the same pages for everyone in the room. Sample case: the company and its figures are fictional.</p>
+      </div>
+      <div class="pg-casebody" role="tabpanel" id="pane-ex1" aria-labelledby="tab-ex1" hidden>
+        <figure class="pg-fig is-lilac"><figcaption><span aria-hidden="true"></span>Exhibit 1 · Metro orders by year</figcaption>
+          <div class="pg-tablebox"><table class="pg-table">
+            <thead><tr><th scope="col">Year</th><th scope="col">Orders (crore)</th><th scope="col">Growth</th></tr></thead>
+            <tbody>
+              <tr><td>FY24</td><td>3.1</td><td>n/a</td></tr>
+              <tr><td>FY25</td><td>3.9</td><td>26%</td></tr>
+              <tr><td>FY26</td><td>4.3</td><td>10%</td></tr>
+            </tbody>
+          </table></div></figure>
+        <p class="pg-fine" style="margin-top:.875rem">Sample case. The company and its figures are fictional.</p>
+      </div>
+      <div class="pg-casebody" role="tabpanel" id="pane-ex2" aria-labelledby="tab-ex2" hidden>
+        <figure class="pg-fig is-mint"><figcaption><span aria-hidden="true"></span>Exhibit 2 · Unit economics by city tier, FY26</figcaption>
+          <div class="pg-tablebox"><table class="pg-table">
+            <thead><tr><th scope="col">Measure</th><th scope="col">Metro</th><th scope="col">Tier-2 (Indore pilot)</th></tr></thead>
+            <tbody>
+              <tr><td>Contribution margin per order</td><td>7.5%</td><td>3.5%</td></tr>
+              <tr><td>Orders per store per day</td><td>1,180</td><td>520</td></tr>
+              <tr><td>Average order value</td><td>₹480</td><td>₹360</td></tr>
+              <tr><td>Delivery cost per order</td><td>₹34</td><td>₹29</td></tr>
+            </tbody>
+          </table></div></figure>
+        <p class="pg-fine" style="margin-top:.875rem">Sample case. The company and its figures are fictional.</p>
+      </div>
+    </div>
+
+    <section class="pg-rail" aria-labelledby="h-table" data-reveal>
+      <div class="pg-rail__in">
+        <div class="pg-cream">
+          <div class="pg-pic" style="height:9.375rem"><img src="assets/hero.webp" width="1400" height="933" alt="" style="object-position:50% 40%"></div>
+          <p class="pg-status">Recording. Everyone is on their own mic.</p>
+        </div>
+        <div class="pg-railhead"><h2 id="h-table">At the table <span class="pg-id">CP3</span></h2><span class="pg-fine" style="font-weight:700">your talk time shows in your report</span></div>
+        <div class="pg-lanes">
+          <div class="pg-row pg-lane is-you" data-lane="you"><span class="pg-av" data-you-initial aria-hidden="true">Y</span><span class="pg-who"><b data-you-name>You</b><small class="pg-lane__state">mic on</small></span><span class="pg-ribbon" data-bars="56"></span></div>
+          <div class="pg-row pg-lane is-lilac" data-lane="ananya"><span class="pg-av" aria-hidden="true">A</span><span class="pg-who"><b>Ananya</b><small class="pg-lane__state">listening</small></span><span class="pg-ribbon" data-bars="56"></span></div>
+          <div class="pg-row pg-lane is-mint" data-lane="rohit"><span class="pg-av" aria-hidden="true">R</span><span class="pg-who"><b>Rohit</b><small class="pg-lane__state">listening</small></span><span class="pg-ribbon" data-bars="56"></span></div>
+          <div class="pg-row pg-lane is-sky" data-lane="ishaan"><span class="pg-av" aria-hidden="true">I</span><span class="pg-who"><b>Ishaan</b><small class="pg-lane__state">listening</small></span><span class="pg-ribbon" data-bars="56"></span></div>
+          <div class="pg-row pg-lane is-butter" data-lane="meher"><span class="pg-av" aria-hidden="true">M</span><span class="pg-who"><b>Meher</b><small class="pg-lane__state">listening</small></span><span class="pg-ribbon" data-bars="56"></span></div>
+        </div>
+        <p class="pg-sr" id="speakNow" aria-live="polite"></p>
+        <div class="pg-controls">
+          <button class="pg-btn pg-btn--cream kit-press" type="button" id="muteBtn" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span>Mute</span></button>
+          <a class="pg-btn pg-btn--cream kit-press" href="#/">Leave room</a>
+          <button class="pg-btn pg-btn--ink kit-press" type="button" data-go="#/processing">End the session (demo)</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</section>
+
+<!-- PROCESSING -->
+<section class="pg-screen" data-route="/processing" data-title="Building your report · PeerLens" aria-labelledby="h-proc" hidden>
+  <div class="pg-layout rail-first" id="proc" data-stage="0">
+    <div class="pg-main">
+      <div data-trail="5"></div>
+      <div class="pg-roomhead" data-reveal>
+        <p class="pg-kick">After the session <span class="pg-id">CP4</span><span class="pg-id">CP5</span></p>
+        <h1 id="h-proc">Turning the session into your report</h1>
+      </div>
+      <ol class="pg-card pg-psteps" id="procSteps" aria-live="polite" data-reveal>
+        <li><span class="pg-ps__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg></span><span><strong>Separating the five voices</strong>Each person was recorded on their own mic.</span></li>
+        <li><span class="pg-ps__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg></span><span><strong>Writing the transcript</strong>Every line gets a name and a time.</span></li>
+        <li><span class="pg-ps__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg></span><span><strong>Drafting your feedback</strong>From the case, the rubric and the transcript.</span></li>
+        <li><span class="pg-ps__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg></span><span><strong>Checking each point quotes you</strong>Lines where two people talked at once are left out.</span></li>
+      </ol>
+      <div class="pg-actions" data-reveal>
+        <button class="pg-btn pg-btn--ink" type="button" data-go="#/report" data-after-proc disabled>Open my report</button>
+        <button class="pg-btn pg-btn--plain" type="button" data-go="#/transcript" data-after-proc disabled>Read the transcript</button>
+      </div>
+    </div>
+    <section class="pg-rail pg-rail--sticky" aria-hidden="true" data-reveal>
+      <div class="pg-rail__in">
+        <div class="pg-cream pg-procvis">
+          <p class="pg-procvis__label">Five voices</p>
+          <div class="pg-tracklist">
+            <div class="is-you"><span class="pg-av" data-you-initial>Y</span><span class="pg-ribbon is-on" data-static=".55" data-seed="5" data-bars="44"></span></div>
+            <div class="is-lilac"><span class="pg-av">A</span><span class="pg-ribbon is-on" data-static=".75" data-seed="9" data-bars="44"></span></div>
+            <div class="is-mint"><span class="pg-av">R</span><span class="pg-ribbon is-on" data-static=".5" data-seed="13" data-bars="44"></span></div>
+            <div class="is-sky"><span class="pg-av">I</span><span class="pg-ribbon is-on" data-static=".45" data-seed="17" data-bars="44"></span></div>
+            <div class="is-butter"><span class="pg-av">M</span><span class="pg-ribbon is-on" data-static=".6" data-seed="29" data-bars="44"></span></div>
+          </div>
+          <div class="pg-down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></div>
+          <p class="pg-procvis__label">Lines with names</p>
+          <div class="pg-plines">
+            <div class="pg-pline is-lilac"><span class="pg-av">A</span><span style="width:88%"></span></div>
+            <div class="pg-pline is-mint"><span class="pg-av">R</span><span style="width:70%"></span></div>
+            <div class="pg-pline is-butter"><span class="pg-av">M</span><span style="width:62%"></span></div>
+            <div class="pg-pline is-sky"><span class="pg-av">I</span><span style="width:80%"></span></div>
+            <div class="pg-pline is-you"><span class="pg-av" data-you-initial>Y</span><span class="is-you-bar" style="width:94%"></span></div>
+            <div class="pg-pline is-lilac"><span class="pg-av">A</span><span style="width:54%"></span></div>
+          </div>
+          <div class="pg-pnote is-you"><span class="pg-av" data-you-initial>Y</span><span><b>Your report</b><br><span class="pg-fine">4 moments, each with a quote</span></span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</section>
+
+<!-- TRANSCRIPT -->
+<section class="pg-screen" data-route="/transcript" data-title="Transcript · PeerLens" aria-labelledby="h-trans" hidden>
+  <div class="pg-layout rail-first">
+    <div class="pg-main">
+      <div data-trail="6"></div>
+      <div class="pg-roomhead" data-reveal>
+        <p class="pg-kick">Room KK-07 <span aria-hidden="true">·</span> Kirana Konnect <span aria-hidden="true">·</span> Fri 23 Oct 2026 <span class="pg-id">CP4</span> <span class="pg-sample">Sample data</span></p>
+        <h1 id="h-trans">Who said what</h1>
+      </div>
+      <ol class="pg-card pg-tlist" id="tlist" data-reveal>
+        <li class="pg-line is-lilac" id="t-0504" data-who="ananya"><span class="pg-time">05:04</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">A</span>Ananya</span><p class="pg-say">Shall we start with what the board actually has to choose? Tier-2 launch or a deeper metro play, and one recommendation by the end.</p></li>
+        <li class="pg-line is-mint" id="t-0531" data-who="rohit"><span class="pg-time">05:31</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">R</span>Rohit</span><p class="pg-say">I'd frame it on returns. Exhibit 2 says the tier-2 margin per order is 3.5%, against 7.5% in the metros.</p></li>
+        <li class="pg-line is-butter" id="t-0612" data-who="meher"><span class="pg-time">06:12</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">M</span>Meher</span><p class="pg-say">And orders per store are less than half. 520 a day against 1,180.</p></li>
+        <li class="pg-line is-sky" id="t-0648" data-who="ishaan"><span class="pg-time">06:48</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">I</span>Ishaan</span><p class="pg-say">But growth matters too. Metro orders grew 26% two years ago and only 10% last year, per exhibit 1.</p></li>
+        <li class="pg-line is-you is-mine" id="t-0730" data-who="you"><span class="pg-time">07:30</span><span class="pg-speaker"><span class="pg-av" data-you-initial aria-hidden="true">Y</span><span data-you-name>You</span></span><p class="pg-say">So the metro case is slowing and the tier-2 case is thin on margin. We need to know which gap closes faster.</p></li>
+        <li class="pg-line is-lilac" id="t-0815" data-who="ananya"><span class="pg-time">08:15</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">A</span>Ananya</span><p class="pg-say">Agreed. Can we list what would have to be true for tier-2 to work?</p></li>
+        <li class="pg-line is-mint" id="t-0902" data-who="rohit"><span class="pg-time">09:02</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">R</span>Rohit</span><p class="pg-say">Density. A dark store only works if the riders are busy.</p></li>
+        <li class="pg-line is-butter" id="t-0940" data-who="meher"><span class="pg-time">09:40</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">M</span>Meher</span><p class="pg-say">And basket size. The average order is ₹360 in tier-2 against ₹480.</p></li>
+        <li class="pg-line is-sky" id="t-1026" data-who="ishaan"><span class="pg-time">10:26</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">I</span>Ishaan</span><p class="pg-say">Delivery is cheaper there though. ₹29 against ₹34.</p></li>
+        <li class="pg-line is-lilac" id="t-1105" data-who="ananya"><span class="pg-time">11:05</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">A</span>Ananya</span><p class="pg-say">That saves five rupees an order, but the basket is 120 rupees smaller. The basket gap matters more.</p></li>
+        <li class="pg-line is-mint" id="t-1152" data-who="rohit"><span class="pg-time">11:52</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">R</span>Rohit</span><p class="pg-say">Then going deeper in the metros could mean adding categories to lift the basket, not just more stores.</p></li>
+        <li class="pg-line is-you is-mine" id="t-1241" data-who="you"><span class="pg-time">12:41</span><span class="pg-speaker"><span class="pg-av" data-you-initial aria-hidden="true">Y</span><span data-you-name>You</span></span><div><p class="pg-say">If tier-2 margins are 4 points lower, as exhibit 2 shows, expansion only pays if order density doubles.</p><a class="pg-quoted" href="#/report?m=1">Quoted in your report, moment 1</a></div></li>
+        <li class="pg-line is-butter" id="t-1320" data-who="meher"><span class="pg-time">13:20</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">M</span>Meher</span><p class="pg-say">Doubling in a year sounds unlikely for a new city.</p></li>
+        <li class="pg-line is-sky" id="t-1405" data-who="ishaan"><span class="pg-time">14:05</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">I</span>Ishaan</span><p class="pg-say">The Indore pilot has run for six months. Has its density moved at all?</p></li>
+        <li class="pg-line is-none" id="t-1510" data-who="none"><span class="pg-time">15:10</span><span class="pg-speaker" style="color:var(--muted)"><span class="pg-none-sq" aria-hidden="true"></span>Two voices</span><p class="pg-say">Two people spoke at once, so this line is not credited to anyone and stays out of the feedback.</p></li>
+        <li class="pg-line is-lilac" id="t-1532" data-who="ananya"><span class="pg-time">15:32</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">A</span>Ananya</span><p class="pg-say">One at a time. Ishaan, you were saying?</p></li>
+        <li class="pg-line is-sky" id="t-1540" data-who="ishaan"><span class="pg-time">15:40</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">I</span>Ishaan</span><p class="pg-say">The case gives no trend for the Indore pilot, so we shouldn't assume its density will double.</p></li>
+        <li class="pg-line is-mint" id="t-1630" data-who="rohit"><span class="pg-time">16:30</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">R</span>Rohit</span><p class="pg-say">Then the risk sits on tier-2. The metros are slower, but proven.</p></li>
+        <li class="pg-line is-butter" id="t-1715" data-who="meher"><span class="pg-time">17:15</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">M</span>Meher</span><p class="pg-say">Slower isn't small. 10% growth on almost 4 crore orders is still 40 lakh more orders.</p></li>
+        <li class="pg-line is-lilac" id="t-1740" data-who="ananya"><span class="pg-time">17:40</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">A</span>Ananya</span><p class="pg-say">Whatever we pick, I'd want a test before the full budget goes in.</p></li>
+        <li class="pg-line is-you is-mine" id="t-1805" data-who="you"><span class="pg-time">18:05</span><span class="pg-speaker"><span class="pg-av" data-you-initial aria-hidden="true">Y</span><span data-you-name>You</span></span><div><p class="pg-say">Building on Ananya's point, we could pilot in two cities before committing.</p><a class="pg-quoted" href="#/report?m=2">Quoted in your report, moment 2</a></div></li>
+        <li class="pg-line is-lilac" id="t-1850" data-who="ananya"><span class="pg-time">18:50</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">A</span>Ananya</span><p class="pg-say">Two cities with a clear density target. Say 800 orders a store by month nine.</p></li>
+        <li class="pg-line is-sky" id="t-1930" data-who="ishaan"><span class="pg-time">19:30</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">I</span>Ishaan</span><p class="pg-say">And the rest of the budget goes to metro categories meanwhile.</p></li>
+        <li class="pg-line is-mint" id="t-2015" data-who="rohit"><span class="pg-time">20:15</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">R</span>Rohit</span><p class="pg-say">Are the metros really slowing for good, or was last year a one-off?</p></li>
+        <li class="pg-line is-you is-mine" id="t-2130" data-who="you"><span class="pg-time">21:30</span><span class="pg-speaker"><span class="pg-av" data-you-initial aria-hidden="true">Y</span><span data-you-name>You</span></span><div><p class="pg-say">I don't think metros are saturated at all.</p><a class="pg-quoted" href="#/report?m=3">Quoted in your report, moment 3</a></div></li>
+        <li class="pg-line is-butter" id="t-2205" data-who="meher"><span class="pg-time">22:05</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">M</span>Meher</span><p class="pg-say">Exhibit 1 shows growth falling from 26% to 10%, so I'd say they are slowing.</p></li>
+        <li class="pg-line is-lilac" id="t-2248" data-who="ananya"><span class="pg-time">22:48</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">A</span>Ananya</span><p class="pg-say">Then our line is most of the money to metro categories, plus a two-city tier-2 test with a density gate.</p></li>
+        <li class="pg-line is-mint" id="t-2340" data-who="rohit"><span class="pg-time">23:40</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">R</span>Rohit</span><p class="pg-say">I'm fine with that, if the gate is written down.</p></li>
+        <li class="pg-line is-sky" id="t-2420" data-who="ishaan"><span class="pg-time">24:20</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">I</span>Ishaan</span><p class="pg-say">Agreed.</p></li>
+        <li class="pg-line is-lilac" id="t-2505" data-who="ananya"><span class="pg-time">25:05</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">A</span>Ananya</span><p class="pg-say">Time to decide. Who summarises?</p></li>
+        <li class="pg-line is-you is-mine" id="t-2520" data-who="you"><span class="pg-time">25:20</span><span class="pg-speaker"><span class="pg-av" data-you-initial aria-hidden="true">Y</span><span data-you-name>You</span></span><div><p class="pg-say">I can. We recommend putting most of next year's budget into new metro categories to lift the basket, and running a two-city tier-2 test that scales only if stores reach 800 orders a day.</p><a class="pg-quoted" href="#/report?m=4">Quoted in your report, moment 4</a></div></li>
+        <li class="pg-line is-butter" id="t-2635" data-who="meher"><span class="pg-time">26:35</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">M</span>Meher</span><p class="pg-say">Add that the Indore pilot data gets reviewed first.</p></li>
+        <li class="pg-line is-you is-mine" id="t-2705" data-who="you"><span class="pg-time">27:05</span><span class="pg-speaker"><span class="pg-av" data-you-initial aria-hidden="true">Y</span><span data-you-name>You</span></span><p class="pg-say">Yes. The Indore numbers get reviewed before the two cities are picked.</p></li>
+        <li class="pg-line is-lilac" id="t-2740" data-who="ananya"><span class="pg-time">27:40</span><span class="pg-speaker"><span class="pg-av" aria-hidden="true">A</span>Ananya</span><p class="pg-say">Good. That's our recommendation.</p></li>
+      </ol>
+      <div class="pg-actions" data-reveal>
+        <a class="pg-btn pg-btn--ink kit-press" href="#/report">Back to your report</a>
+        <a class="pg-btn pg-btn--rail kit-press" href="#/">Back to the start</a>
+      </div>
+    </div>
+    <section class="pg-rail pg-rail--sticky" aria-labelledby="h-speakers" data-reveal>
+      <div class="pg-rail__in">
+        <div class="pg-railhead"><h2 id="h-speakers">Speakers</h2><span class="pg-fine" style="font-weight:700">tap to filter</span></div>
+        <div class="pg-filters" role="group" aria-label="Show lines from">
+          <button type="button" data-filter="all" aria-pressed="true"><span class="pg-av pg-allsq" aria-hidden="true"><i></i></span><span class="pg-fname"><span class="pg-fl-long">Everyone</span><span class="pg-fl-short">All</span></span><span class="pg-count" data-count="all"></span></button>
+          <button type="button" class="is-you" data-filter="you" aria-pressed="false"><span class="pg-av" data-you-initial aria-hidden="true">Y</span><span class="pg-fname" data-you-name>You</span><span class="pg-count" data-count="you"></span></button>
+          <button type="button" class="is-lilac" data-filter="ananya" aria-pressed="false"><span class="pg-av" aria-hidden="true">A</span><span class="pg-fname">Ananya</span><span class="pg-count" data-count="ananya"></span></button>
+          <button type="button" class="is-mint" data-filter="rohit" aria-pressed="false"><span class="pg-av" aria-hidden="true">R</span><span class="pg-fname">Rohit</span><span class="pg-count" data-count="rohit"></span></button>
+          <button type="button" class="is-sky" data-filter="ishaan" aria-pressed="false"><span class="pg-av" aria-hidden="true">I</span><span class="pg-fname">Ishaan</span><span class="pg-count" data-count="ishaan"></span></button>
+          <button type="button" class="is-butter" data-filter="meher" aria-pressed="false"><span class="pg-av" aria-hidden="true">M</span><span class="pg-fname">Meher</span><span class="pg-count" data-count="meher"></span></button>
+        </div>
+        <div class="pg-dashed">The line at 15:10 had two people talking at once. We can't tell who said what, so it stays out of every report.</div>
+      </div>
+    </section>
+  </div>
+</section>
+
+<!-- REPORT -->
+<section class="pg-screen" data-route="/report" data-title="Your report · PeerLens" aria-labelledby="h-report" hidden>
+  <div class="pg-layout">
+    <div class="pg-main">
+      <div data-trail="5"></div>
+      <div class="pg-roomhead" data-stagger>
+        <p class="pg-kick">Your feedback report <span class="pg-id">CE</span> <span aria-hidden="true">·</span> Fri 23 Oct 2026, 30 min <span class="pg-sample">Sample data</span></p>
+        <h1 id="h-report">Kirana Konnect: expand to <span class="pg-nw">tier-2</span> cities or go deeper in metros?</h1>
+        <div class="pg-people">
+          <span class="pg-avs" aria-hidden="true"><span class="pg-av is-you" data-you-initial>Y</span><span class="pg-av is-lilac">A</span><span class="pg-av is-mint">R</span><span class="pg-av is-sky">I</span><span class="pg-av is-butter">M</span></span>
+          <span><span data-you-name>You</span>, Ananya, Rohit, Ishaan and Meher</span>
+        </div>
+        <p class="pg-fine" style="font-size:.9375rem">You spoke for 3 min 50 s of the 30-minute session. It is just for your information. There is no target.</p>
+      </div>
+
+      <div class="pg-twin" data-stagger>
+        <article class="pg-card is-mint"><span class="pg-twin__h"><span class="pg-dot" aria-hidden="true"></span>What helped</span>
+          <p>You tied an exhibit number to the decision, built on Ananya's idea instead of starting over, and summarised the group's call with a clear condition.</p></article>
+        <article class="pg-card is-pink"><span class="pg-twin__h"><span class="pg-dot" aria-hidden="true"></span>Work on</span>
+          <p>When you challenged the metro slowdown, nothing from the case backed it, and exhibit 1 pointed the other way.</p></article>
+      </div>
+
+      <section class="pg-card pg-timeline" aria-labelledby="h-tl" data-reveal>
+        <div class="pg-tl__head">
+          <h2 id="h-tl" style="font-size:1.25rem">When you spoke</h2>
+          <span class="pg-fine">Black blocks show when you spoke. Pins mark the four moments quoted in this report.</span>
+        </div>
+        <div class="pg-tl" role="group" aria-label="Your track: you spoke six times between minute 7 and minute 27; moments at 12:41, 18:05, 21:30 and 25:20.">
+          <span class="pg-tl__seg" style="left:25%;width:2.22%"></span>
+          <span class="pg-tl__seg" style="left:42.28%;width:1.94%"></span>
+          <span class="pg-tl__seg" style="left:60.28%;width:2.22%"></span>
+          <span class="pg-tl__seg" style="left:71.67%;width:1.11%"></span>
+          <span class="pg-tl__seg" style="left:84.44%;width:3.89%"></span>
+          <span class="pg-tl__seg" style="left:90.28%;width:1.39%"></span>
+          <a class="pg-tl__pin" href="#/report?m=1" style="left:42.28%" aria-label="Moment 1 at 12:41">1</a>
+          <a class="pg-tl__pin" href="#/report?m=2" style="left:60.28%" aria-label="Moment 2 at 18:05">2</a>
+          <a class="pg-tl__pin" href="#/report?m=3" style="left:71.67%" aria-label="Moment 3 at 21:30">3</a>
+          <a class="pg-tl__pin" href="#/report?m=4" style="left:84.44%" aria-label="Moment 4 at 25:20">4</a>
+        </div>
+        <div class="pg-tl__axis" aria-hidden="true"><span>0 min</span><span>10</span><span>20</span><span>30 min</span></div>
+      </section>
+
+      <div class="pg-card pg-howmade" data-reveal>
+        <span class="pg-sq is-butter" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="m9 12 2 2 4-4"/></svg></span>
+        <div>
+          <p style="color:var(--ink);font-weight:800">How this report was made <span class="pg-id">CP5</span></p>
+          <p>An AI wrote a first draft from the case, the scoring rubric and the transcript. Then each point was checked to make sure it quotes something you said. The line at 15:10, where two people spoke at once, was left out.</p>
+          <p>This report is yours. Recruiters never see it.</p>
+        </div>
+      </div>
+      <div class="pg-actions" data-reveal>
+        <a class="pg-btn pg-btn--ink kit-press" href="#/transcript">Read the full transcript</a>
+        <a class="pg-btn pg-btn--rail kit-press" href="#/">Back to the start</a>
+      </div>
+    </div>
+
+    <section class="pg-rail" aria-labelledby="h-moments">
+      <div class="pg-rail__in">
+        <div class="pg-cream" data-reveal>
+          <div class="pg-pic" style="height:13.125rem"><img src="assets/report.webp" width="800" height="800" alt="A student in an armchair reads her feedback on a laptop with pastel sticky notes, a dog asleep at her feet" style="object-position:50% 45%"></div>
+        </div>
+        <div class="pg-railhead" data-reveal><h2 id="h-moments">Four moments, in your words</h2></div>
+        <article class="pg-moment kit-lift is-mint" id="m-1" data-reveal>
+          <div class="pg-moment__q"><blockquote>"If tier-2 margins are 4 points lower, as exhibit 2 shows, expansion only pays if order density doubles."</blockquote></div>
+          <div class="pg-moment__row"><a class="pg-go" href="#/transcript?t=1241" aria-label="See 12:41 in the transcript"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            <p><b>Used the numbers.</b> You took the margin gap from exhibit 2 and named the condition that would make tier-2 pay.</p></div>
+          <div class="pg-moment__foot"><span>Moment 1</span><b>12:41</b></div>
+        </article>
+        <article class="pg-moment kit-lift is-butter" id="m-2" data-reveal>
+          <div class="pg-moment__q"><blockquote>"Building on Ananya's point, we could pilot in two cities before committing."</blockquote></div>
+          <div class="pg-moment__row"><a class="pg-go" href="#/transcript?t=1805" aria-label="See 18:05 in the transcript"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            <p><b>Built on a classmate's idea.</b> You credited Ananya's idea and turned it into a smaller step the group could test.</p></div>
+          <div class="pg-moment__foot"><span>Moment 2</span><b>18:05</b></div>
+        </article>
+        <article class="pg-moment kit-lift is-pink" id="m-3" data-reveal>
+          <div class="pg-moment__q"><blockquote>"I don't think metros are saturated at all."</blockquote></div>
+          <div class="pg-moment__row"><a class="pg-go" href="#/transcript?t=2130" aria-label="See 21:30 in the transcript"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            <p><b>Pushed back without evidence.</b> Fair to question, but exhibit 1 shows metro growth falling from 26% to 10%, and the group moved on.</p></div>
+          <div class="pg-moment__foot"><span>Moment 3</span><b>21:30</b></div>
+        </article>
+        <article class="pg-moment kit-lift is-lilac" id="m-4" data-reveal>
+          <div class="pg-moment__q"><blockquote>"We recommend putting most of next year's budget into new metro categories... and running a two-city tier-2 test that scales only if stores reach 800 orders a day."</blockquote></div>
+          <div class="pg-moment__row"><a class="pg-go" href="#/transcript?t=2520" aria-label="See 25:20 in the transcript"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            <p><b>Summed up the decision.</b> You offered to summarise and stated the decision with the condition that would change it.</p></div>
+          <div class="pg-moment__foot"><span>Moment 4</span><b>25:20</b></div>
+        </article>
+      </div>
+    </section>
+  </div>
+</section>
+
+<!-- PRIVACY -->
+<section class="pg-screen" data-route="/privacy" data-title="Privacy and cookies · PeerLens" aria-labelledby="h-priv" hidden>
+  <div class="pg-layout rail-first">
+    <div class="pg-main">
+      <article class="pg-card pg-doc" data-reveal>
+        <div>
+          <p class="pg-kick">Statutory <span class="pg-id">S2</span> <span class="pg-sample">Sample notice</span></p>
+          <h1 id="h-priv" style="margin-top:.5rem">Privacy and cookie notice</h1>
+        </div>
+        <section>
+          <h2>What we collect</h2>
+          <p>The display name you type, your voice on its own track during a session, the transcript made from it, and your feedback report. We never ask for an email or a password, because you join with a name.</p>
+        </section>
+        <section>
+          <h2>Why we collect it</h2>
+          <p>To tie each point in your feedback to what you actually said. We do not use it for anything else, and we never share scores or ranks with recruiters.</p>
+        </section>
+        <section>
+          <h2>How long we keep it</h2>
+          <div class="pg-keep">
+            <div class="is-pink"><b>30 days</b><span>Audio recordings</span></div>
+            <div class="is-sky"><b>180 days</b><span>Transcripts and reports</span></div>
+            <div class="is-mint"><b>7 days</b><span>To act on a deletion request</span></div>
+          </div>
+        </section>
+        <section id="delete">
+          <h2>Ask us to delete your data</h2>
+          <form id="delForm" class="pg-form" style="padding:0;gap:1rem">
+            <div class="pg-field"><label for="delName">Name you used in the room</label><input class="pg-input" id="delName" type="text" autocomplete="off"></div>
+            <div class="pg-field"><label for="delRoom">Room code</label><input class="pg-input" id="delRoom" type="text" placeholder="For example, KK-07" autocomplete="off"></div>
+            <fieldset style="border:0;padding:0;margin:0" class="pg-field"><legend class="pg-legend" style="margin-bottom:.5rem">What to delete</legend>
+              <div class="pg-radio">
+                <label><input type="radio" name="what" value="audio"> Audio only</label>
+                <label><input type="radio" name="what" value="report"> Transcript and report</label>
+                <label><input type="radio" name="what" value="all" checked> Everything</label>
+              </div>
+            </fieldset>
+            <div class="pg-actions"><button class="pg-btn pg-btn--ink kit-press" type="submit">Send deletion request (demo)</button></div>
+            <p class="pg-done" id="delDone" tabindex="-1" hidden>Request noted. A live PeerLens would act on it within 7 days. In this prototype, nothing was sent.</p>
+          </form>
+        </section>
+        <section id="cookies">
+          <h2>Cookies</h2>
+          <div class="pg-tablebox"><table class="pg-table pg-cookietable">
+            <thead><tr><th scope="col">What it does</th><th scope="col">Kind</th></tr></thead>
+            <tbody>
+              <tr><td>Keeps you in your room during a session</td><td>Essential</td></tr>
+              <tr><td>Remembers your theme and your cookie choice</td><td>Essential</td></tr>
+              <tr><td>Counts which screens people open, without names, to find confusing ones</td><td>Optional, off unless you accept</td></tr>
+            </tbody>
+          </table></div>
+          <p><strong style="color:var(--ink)" data-cookie-state>No choice made yet</strong></p>
+          <div class="pg-actions">
+            <button class="pg-btn pg-btn--plain" type="button" data-cookie="rejected">Reject optional cookies</button>
+            <button class="pg-btn pg-btn--plain" type="button" data-cookie="accepted">Accept optional cookies</button>
+          </div>
+        </section>
+        <section>
+          <h2>Questions or complaints</h2>
+          <p>Write to our grievance officer. Their details are on the <a href="#/contact">company and grievance contact page</a>.</p>
+        </section>
+        <p class="pg-note">This prototype sends nothing anywhere. Choices are stored only in your own browser.</p>
+      </article>
+    </div>
+    <section class="pg-rail pg-rail--sticky" aria-label="Legal pages" data-reveal>
+      <div class="pg-rail__in">
+        <div class="pg-cream pg-legalpic"><div class="pg-pic" style="height:100%"><img src="assets/legal.webp" width="640" height="640" alt="A lilac folder with a small padlock, a sealed envelope and a rubber stamp on a desk"></div></div>
+        <nav class="pg-legalnav" aria-label="Legal pages">
+          <a href="#/privacy" data-nav="/privacy"><span class="pg-av is-pink" aria-hidden="true">S2</span>Privacy and cookies</a>
+          <a href="#/terms" data-nav="/terms"><span class="pg-av is-sky" aria-hidden="true">S3</span>Terms of use</a>
+          <a href="#/contact" data-nav="/contact"><span class="pg-av is-lilac" aria-hidden="true">S4</span>Company and grievance contact</a>
+        </nav>
+      </div>
+    </section>
+  </div>
+</section>
+
+<!-- TERMS -->
+<section class="pg-screen" data-route="/terms" data-title="Terms of use · PeerLens" aria-labelledby="h-terms" hidden>
+  <div class="pg-layout rail-first">
+    <div class="pg-main">
+      <article class="pg-card pg-doc" data-reveal>
+        <div>
+          <p class="pg-kick">Statutory <span class="pg-id">S3</span> <span class="pg-sample">Sample terms</span></p>
+          <h1 id="h-terms" style="margin-top:.5rem">Terms of use</h1>
+        </div>
+        <section>
+          <h2>The short version</h2>
+          <ol>
+            <li><strong>PeerLens is for practice.</strong> Your report is feedback for you. It is not used for hiring, and it is never shared with recruiters.</li>
+            <li><strong>Join only rooms you were invited to</strong>, from your own device, with headphones.</li>
+            <li><strong>Respect the people in your room.</strong> Do not record, copy or share anyone else's voice or words outside PeerLens.</li>
+            <li><strong>Feedback is drafted by AI and can be wrong.</strong> Every point quotes a turn, so you can check it against the transcript.</li>
+            <li><strong>We may remove someone from a room</strong> for abuse or harassment.</li>
+            <li><strong>You can leave a room at any time</strong> and ask us to delete your data, as the <a href="#/privacy">privacy notice</a> explains.</li>
+          </ol>
+        </section>
+        <p class="pg-note">Sample terms written for the prototype. A live service would publish full terms reviewed by a lawyer.</p>
+      </article>
+    </div>
+    <section class="pg-rail pg-rail--sticky" aria-label="Legal pages" data-reveal>
+      <div class="pg-rail__in">
+        <div class="pg-cream pg-legalpic"><div class="pg-pic" style="height:100%"><img src="assets/legal.webp" width="640" height="640" alt="A lilac folder with a small padlock, a sealed envelope and a rubber stamp on a desk"></div></div>
+        <nav class="pg-legalnav" aria-label="Legal pages">
+          <a href="#/privacy" data-nav="/privacy"><span class="pg-av is-pink" aria-hidden="true">S2</span>Privacy and cookies</a>
+          <a href="#/terms" data-nav="/terms"><span class="pg-av is-sky" aria-hidden="true">S3</span>Terms of use</a>
+          <a href="#/contact" data-nav="/contact"><span class="pg-av is-lilac" aria-hidden="true">S4</span>Company and grievance contact</a>
+        </nav>
+      </div>
+    </section>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="pg-screen" data-route="/contact" data-title="Company and grievance contact · PeerLens" aria-labelledby="h-contact" hidden>
+  <div class="pg-layout rail-first">
+    <div class="pg-main">
+      <article class="pg-card pg-doc" data-reveal>
+        <div>
+          <p class="pg-kick">Statutory <span class="pg-id">S4</span> <span class="pg-sample">Sample details</span></p>
+          <h1 id="h-contact" style="margin-top:.5rem">Who runs PeerLens, and whom to ask about your data</h1>
+        </div>
+        <div class="pg-contact">
+          <div class="is-butter"><h2><span class="pg-dot" aria-hidden="true"></span>The company</h2>
+            <p>PeerLens Learning Private Limited (sample name)</p>
+            <p>Registered office: to be added when the company is registered.</p></div>
+          <div class="is-lilac"><h2><span class="pg-dot" aria-hidden="true"></span>Grievance officer</h2>
+            <p>Name to be added at registration.</p>
+            <p>Email: <a href="mailto:grievance@peerlens.example">grievance@peerlens.example</a></p></div>
+          <div class="is-mint"><h2><span class="pg-dot" aria-hidden="true"></span>What you can ask</h2>
+            <p>Any question about your personal data, a request to correct or delete it, or a complaint about how it was handled.</p></div>
+          <div class="is-sky"><h2><span class="pg-dot" aria-hidden="true"></span>When we answer</h2>
+            <p>Within 90 days, the limit set by rule 14 of the Digital Personal Data Protection Rules, 2025.</p></div>
+        </div>
+        <p>Section 8(9) of the Digital Personal Data Protection Act, 2023 asks every service that handles personal data to publish this contact.</p>
+        <p class="pg-note">PeerLens is a student concept by DPCC Section B, Group 7, XLRI. The company and officer details are placeholders a registered company would fill in.</p>
+      </article>
+    </div>
+    <section class="pg-rail pg-rail--sticky" aria-label="Legal pages" data-reveal>
+      <div class="pg-rail__in">
+        <div class="pg-cream pg-legalpic"><div class="pg-pic" style="height:100%"><img src="assets/legal.webp" width="640" height="640" alt="A lilac folder with a small padlock, a sealed envelope and a rubber stamp on a desk"></div></div>
+        <nav class="pg-legalnav" aria-label="Legal pages">
+          <a href="#/privacy" data-nav="/privacy"><span class="pg-av is-pink" aria-hidden="true">S2</span>Privacy and cookies</a>
+          <a href="#/terms" data-nav="/terms"><span class="pg-av is-sky" aria-hidden="true">S3</span>Terms of use</a>
+          <a href="#/contact" data-nav="/contact"><span class="pg-av is-lilac" aria-hidden="true">S4</span>Company and grievance contact</a>
+        </nav>
+      </div>
+    </section>
+  </div>
+</section>
+
+<!-- FEATURE MAP -->
+<section class="pg-screen" data-route="/features" data-title="Feature map · PeerLens" aria-labelledby="h-fmap" hidden>
+  <div class="pg-layout">
+    <div class="pg-main">
+      <div class="pg-roomhead" data-reveal>
+        <p class="pg-kick">For reviewers</p>
+        <h1 id="h-fmap">Feature map</h1>
+        <p class="pg-lede">Every MVP feature in this prototype, and the screen where you can try it without signing in.</p>
+      </div>
+      <div class="pg-card pg-fmap" data-reveal>
+        <div class="pg-frow kit-lift"><span class="pg-id">CP1</span><div><h2>Join a practice room by invite link</h2><p>Open an invite, type a name and enter the room without an account.</p></div><span class="pg-ftype">Critical path</span><a href="#/invite">Invite and name</a></div>
+        <div class="pg-frow kit-lift"><span class="pg-id">CP2</span><div><h2>Shared case pack</h2><p>The same reviewed case, with exhibits, for everyone in the room.</p></div><span class="pg-ftype">Critical path</span><a href="#/room">Practice room</a></div>
+        <div class="pg-frow kit-lift"><span class="pg-id">CP3</span><div><h2>Group audio, one track per person</h2><p>Each voice recorded separately, with a mic check before you join.</p></div><span class="pg-ftype">Critical path</span><a href="#/room">Practice room</a></div>
+        <div class="pg-frow kit-lift"><span class="pg-id">CP4</span><div><h2>Speaker-tagged transcript</h2><p>Every line tagged with its speaker and time.</p></div><span class="pg-ftype">Critical path</span><a href="#/transcript">Transcript</a></div>
+        <div class="pg-frow kit-lift"><span class="pg-id">CP5</span><div><h2>AI feedback draft</h2><p>Drafted from the case, the rubric and the transcript; every point quotes something you said.</p></div><span class="pg-ftype">Critical path</span><a href="#/processing">Processing</a></div>
+        <div class="pg-frow kit-lift"><span class="pg-id">CE</span><div><h2>Individual feedback report</h2><p>What helped, what to work on, and quoted moments linked to the transcript.</p></div><span class="pg-ftype">Critical event</span><a href="#/report">Your report</a></div>
+        <div class="pg-frow kit-lift"><span class="pg-id">S1</span><div><h2>Recording consent before joining</h2><p>What is recorded, why and for how long; the room opens only after you agree.</p></div><span class="pg-ftype">Statutory</span><a href="#/consent">Consent</a></div>
+        <div class="pg-frow kit-lift"><span class="pg-id">S2</span><div><h2>Privacy and cookie notice</h2><p>Retention, deletion requests, and a first-visit choice on optional cookies.</p></div><span class="pg-ftype">Statutory</span><a href="#/privacy">Privacy and cookies</a></div>
+        <div class="pg-frow kit-lift"><span class="pg-id">S3</span><div><h2>Terms of use</h2><p>The rules, including that reports are not used for hiring.</p></div><span class="pg-ftype">Statutory</span><a href="#/terms">Terms of use</a></div>
+        <div class="pg-frow kit-lift"><span class="pg-id">S4</span><div><h2>Company and grievance contact</h2><p>Who runs PeerLens and whom to ask about your data, with the 90-day answer window.</p></div><span class="pg-ftype">Statutory</span><a href="#/contact">Contact</a></div>
+      </div>
+    </div>
+    <section class="pg-rail pg-rail--sticky" aria-label="What the prototype covers" data-reveal>
+      <div class="pg-rail__in">
+        <div class="pg-railhead"><h2>In this prototype</h2></div>
+        <div class="pg-tally">
+          <div><b>6</b><span>critical path features, including the critical event</span></div>
+          <div><b>4</b><span>statutory features under India's data protection law</span></div>
+        </div>
+        <div class="pg-dashed">Top-10 features from the Kano survey are added here after the survey results and capacity planning.</div>
+      </div>
+    </section>
+  </div>
+</section>
+
+<footer class="pg-foot">
+  <div>
+    <a class="pg-brand" href="#/"><span class="pg-lens" aria-hidden="true"></span>PeerLens</a>
+    <p>A designed concept by DPCC Section B, Group 7, XLRI. This clickable prototype uses sample data, and nothing you type leaves your browser.</p>
+  </div>
+  <nav aria-label="Legal and help">
+    <a href="#/privacy">Privacy and cookies</a>
+    <a href="#/terms">Terms of use</a>
+    <a href="#/contact">Company and grievance contact</a>
+    <a href="#/features">Feature map</a>
+    <button class="pg-linkbtn" type="button" data-cookie-open>Cookie choices</button>
+  </nav>
+</footer>
+</main>
+</div>
+
+<div class="pg-cookie" id="cookieBar" role="region" aria-labelledby="h-cookie" hidden>
+  <div class="pg-cookie__text">
+    <h2 id="h-cookie">Your cookie choice <span class="pg-id">S2</span></h2>
+    <p>Essential cookies keep you in your room. Optional ones count which screens people open, without names, so we can fix confusing ones. <a href="#/privacy" style="font-weight:700">Read the cookie notice</a></p>
+  </div>
+  <div class="pg-actions">
+    <button class="pg-btn pg-btn--plain" type="button" data-cookie="rejected">Reject optional</button>
+    <button class="pg-btn pg-btn--plain" type="button" data-cookie="accepted">Accept optional</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  var RM = matchMedia('(prefers-reduced-motion: reduce)');
+  function $(s, r) { return (r || document).querySelector(s); }
+  function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  function sget(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
+  function sset(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} }
+  function lget(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lset(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+  /* Journey trail */
+  var STEPS = [['/invite', 'Invite'], ['/consent', 'Consent'], ['/join', 'Your name'], ['/room', 'Room'], ['/report', 'Report'], ['/transcript', 'Transcript']];
+  var TICK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>';
+  $$('[data-trail]').forEach(function (el) {
+    var cur = +el.getAttribute('data-trail');
+    el.setAttribute('data-reveal', '');
+    el.innerHTML = '<ol class="pg-trail" aria-label="Session steps">' + STEPS.map(function (s, i) {
+      var n = i + 1, st = n < cur ? 'is-done' : n === cur ? 'is-now' : '';
+      return '<li class="' + st + '"><a href="#' + s[0] + '"' + (n === cur ? ' aria-current="step"' : '') + '><span class="pg-trail__dot">' +
+        (n < cur ? TICK : n) + '</span><span>' + s[1] + '</span></a></li>';
+    }).join('') + '</ol>';
+  });
+
+  /* Display name */
+  function nameNow() { return (sget('pl-name') || '').trim() || 'You'; }
+  function applyName() {
+    var n = nameNow();
+    $$('[data-you-name]').forEach(function (e) { e.textContent = n; });
+    $$('[data-you-initial]').forEach(function (e) { e.textContent = n.charAt(0).toUpperCase(); });
+    var inp = $('#name'); if (inp && n !== 'You' && !inp.value) inp.value = n;
+  }
+  applyName();
+
+  /* Transcript line counts per speaker */
+  $$('[data-count]').forEach(function (c) {
+    var w = c.getAttribute('data-count');
+    var n = $$('#tlist .pg-line').filter(function (l) { return w === 'all' || l.getAttribute('data-who') === w; }).length;
+    c.textContent = n + ' lines';
+  });
+
+  /* Ribbons: bars, static shapes for decoration, live levels for the room and the mic check */
+  $$('.pg-ribbon').forEach(function (el) {
+    var n = +el.getAttribute('data-bars') || 48, f = document.createDocumentFragment();
+    for (var i = 0; i < n; i++) f.appendChild(document.createElement('i'));
+    el.appendChild(f);
+  });
+  function seeded(seed) { var s = seed % 2147483647; if (s <= 0) s += 2147483646; return function () { s = s * 16807 % 2147483647; return (s - 1) / 2147483646; }; }
+  $$('.pg-ribbon[data-static]').forEach(function (el, k) {
+    var r = seeded((+el.getAttribute('data-seed') || k + 3) * 7919), lvl = +el.getAttribute('data-static') || .5, bars = el.children, n = bars.length;
+    for (var i = 0; i < n; i++) {
+      var env = .35 + .65 * Math.sin(Math.PI * (i + .5) / n);
+      bars[i].style.transform = 'scaleY(' + Math.min(1, .14 + lvl * env * (.3 + .7 * r())).toFixed(3) + ')';
+    }
+  });
+  function paint(ribbon, lvl) {
+    var bars = ribbon.children, prev = ribbon._prev || [];
+    for (var i = 0; i < bars.length; i++) {
+      var target = lvl > 0 ? .1 + lvl * (.2 + .8 * Math.random()) : .1 + Math.random() * .06;
+      var v = prev[i] == null ? target : prev[i] * .45 + target * .55;
+      prev[i] = v;
+      bars[i].style.transform = 'scaleY(' + Math.min(1, v).toFixed(3) + ')';
+    }
+    ribbon._prev = prev;
+  }
+  /* Show only the bars that fit, so a narrow track never clips a bar in half */
+  function fitRibbons(scope) {
+    $$('.pg-ribbon', scope).forEach(function (r) {
+      var w = r.clientWidth, b = r.children[0]; if (!w || !b) return;
+      var gap = parseFloat(getComputedStyle(r).columnGap) || 3, bw = parseFloat(getComputedStyle(b).flexBasis) || 3;
+      var cap = Math.floor((w + gap) / (bw + gap));
+      for (var i = 0; i < r.children.length; i++) r.children[i].style.display = i < cap ? '' : 'none';
+    });
+  }
+  var fitT = null;
+  window.addEventListener('resize', function () { clearTimeout(fitT); fitT = setTimeout(function () { fitRibbons(current); }, 120); });
+  var loop = null, speakLoop = null;
+  function stopLive() { clearInterval(loop); clearInterval(speakLoop); loop = speakLoop = null; }
+  function live(fn) { stopLive(); fn(); if (!RM.matches) loop = setInterval(function () { if (!document.hidden) fn(); }, 150); }
+
+  var ORDER = ['ananya', 'rohit', 'you', 'meher', 'ishaan', 'ananya', 'you', 'rohit'], who = 0, muted = false;
+  function setSpeaker() {
+    var s = ORDER[who % ORDER.length];
+    if (s === 'you' && muted) s = 'ananya';
+    $$('.pg-lane').forEach(function (l) {
+      var me = l.getAttribute('data-lane'), on = me === s;
+      l.classList.toggle('is-speaking', on);
+      $('.pg-lane__state', l).textContent = me === 'you' ? (muted ? 'muted' : on ? 'speaking' : 'mic on') : on ? 'speaking' : 'listening';
+    });
+    $('#speakNow').textContent = (s === 'you' ? nameNow() : s.charAt(0).toUpperCase() + s.slice(1)) + ' is speaking';
+  }
+  function roomFrame() {
+    $$('.pg-lane').forEach(function (l) {
+      var on = l.classList.contains('is-speaking'), me = l.getAttribute('data-lane');
+      paint($('.pg-ribbon', l), me === 'you' && muted ? 0 : on ? .9 : 0);
+    });
+  }
+  function startRoom() {
+    who = 0; setSpeaker(); live(roomFrame);
+    if (!RM.matches) speakLoop = setInterval(function () { if (!document.hidden) { who++; setSpeaker(); } }, 2600);
+  }
+  var mute = $('#muteBtn');
+  mute.addEventListener('click', function () {
+    muted = !muted;
+    mute.setAttribute('aria-pressed', muted ? 'true' : 'false');
+    $('span', mute).textContent = muted ? 'Unmute' : 'Mute';
+    setSpeaker(); roomFrame();
+  });
+  function startMic() { var m = $('#micRibbon'), t = 0; live(function () { t++; paint(m, .45 + .35 * Math.abs(Math.sin(t / 5))); }); }
+
+  /* Processing steps */
+  var procTimers = [];
+  function runProcessing() {
+    procTimers.forEach(clearTimeout); procTimers = [];
+    var steps = $$('#procSteps li'), proc = $('#proc'), btns = $$('[data-after-proc]');
+    btns.forEach(function (b) { b.disabled = true; });
+    function finish() { steps.forEach(function (s) { s.className = 'is-done'; }); proc.setAttribute('data-stage', '4'); btns.forEach(function (b) { b.disabled = false; }); }
+    if (RM.matches) { finish(); return; }
+    steps.forEach(function (s) { s.className = ''; }); proc.setAttribute('data-stage', '0');
+    steps.forEach(function (s, i) {
+      procTimers.push(setTimeout(function () { s.className = 'is-run'; proc.setAttribute('data-stage', String(i + 1)); }, 300 + i * 950));
+      procTimers.push(setTimeout(function () { s.className = 'is-done'; }, 300 + i * 950 + 850));
+    });
+    procTimers.push(setTimeout(finish, 300 + steps.length * 950));
+  }
+
+  /* Transcript filters and highlights */
+  $$('.pg-filters button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var f = b.getAttribute('data-filter');
+      $$('.pg-filters button').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      $$('#tlist .pg-line').forEach(function (l) { l.hidden = !(f === 'all' || l.getAttribute('data-who') === f); });
+    });
+  });
+  function goEl(el) { if (window.kit) window.kit.goTo(el); else el.scrollIntoView({ behavior: RM.matches ? 'auto' : 'smooth', block: 'center' }); }
+  function hitLine(t) {
+    var el = document.getElementById('t-' + t); if (!el) return;
+    $$('.pg-filters button')[0].click();
+    setTimeout(function () { goEl(el); el.classList.remove('is-hit'); void el.offsetWidth; el.classList.add('is-hit'); setTimeout(function () { el.classList.remove('is-hit'); }, 2600); }, 80);
+  }
+
+  /* Tabs */
+  $$('[role="tablist"]').forEach(function (tl) {
+    var tabs = $$('[role="tab"]', tl);
+    function pick(i) {
+      tabs.forEach(function (t, k) {
+        var on = k === i; t.setAttribute('aria-selected', on ? 'true' : 'false'); t.tabIndex = on ? 0 : -1;
+        var p = document.getElementById(t.getAttribute('aria-controls'));
+        p.hidden = !on; if (on) p.classList.add('in', 'kit-done');
+      });
+    }
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { pick(i); });
+      t.addEventListener('keydown', function (e) {
+        if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+        e.preventDefault(); var j = (i + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length; pick(j); tabs[j].focus();
+      });
+    });
+  });
+
+  /* Consent, name, buttons that navigate */
+  var agree = $('#agree'), go = $('#consentGo');
+  agree.checked = sget('pl-consent') === '1'; go.disabled = !agree.checked;
+  agree.addEventListener('change', function () { go.disabled = !agree.checked; sset('pl-consent', agree.checked ? '1' : ''); });
+  $('#joinForm').addEventListener('submit', function (e) {
+    e.preventDefault(); sset('pl-name', $('#name').value.trim()); applyName(); location.hash = '#/room';
+  });
+  $$('[data-go]').forEach(function (b) { b.addEventListener('click', function () { if (!b.disabled) location.hash = b.getAttribute('data-go'); }); });
+  $('#delForm').addEventListener('submit', function (e) { e.preventDefault(); var d = $('#delDone'); d.hidden = false; d.focus(); });
+
+  /* Cookie choice (S2) */
+  var bar = $('#cookieBar');
+  function renderCookie() {
+    var s = lget('pl-cookie');
+    $$('[data-cookie-state]').forEach(function (e) { e.textContent = s === 'accepted' ? 'Your choice: optional cookies on.' : s === 'rejected' ? 'Your choice: optional cookies off.' : 'No choice made yet.'; });
+    $$('[data-cookie]').forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-cookie') === s ? 'true' : 'false'); });
+  }
+  $$('[data-cookie]').forEach(function (b) { b.addEventListener('click', function () { lset('pl-cookie', b.getAttribute('data-cookie')); bar.hidden = true; renderCookie(); }); });
+  $$('[data-cookie-open]').forEach(function (b) { b.addEventListener('click', function () { bar.hidden = false; $('button', bar).focus(); }); });
+  if (!lget('pl-cookie')) bar.hidden = false;
+  renderCookie();
+
+  /* Reveals again on each screen change (the kit runs them once at load) */
+  var io = 'IntersectionObserver' in window ? new IntersectionObserver(function (es) {
+    es.forEach(function (en) { if (en.isIntersecting) { show(en.target); io.unobserve(en.target); } });
+  }, { rootMargin: '0px 0px -8% 0px' }) : null;
+  function show(el) {
+    el.classList.add('in');
+    var d = parseFloat(getComputedStyle(el).getPropertyValue('--kit-d')) || 0;
+    setTimeout(function () { el.classList.add('kit-done'); }, d + 800);
+  }
+  function replay(scr) {
+    var els = $$('[data-reveal]', scr);
+    if (RM.matches || !io) { els.forEach(function (el) { el.classList.add('in', 'kit-done'); }); return; }
+    els.forEach(function (el) { el.classList.remove('in', 'kit-done'); io.unobserve(el); });
+    void scr.offsetHeight;
+    requestAnimationFrame(function () {
+      var fold = window.innerHeight * .92;
+      els.forEach(function (el) { if (el.getBoundingClientRect().top < fold) show(el); else io.observe(el); });
+    });
+  }
+
+  /* Router */
+  var screens = $$('.pg-screen'), current = null, first = true;
+  function parse() {
+    var h = location.hash.slice(1);
+    if (h.charAt(0) !== '/') return null;
+    var parts = h.split('?');
+    return { path: parts[0] || '/', q: new URLSearchParams(parts[1] || '') };
+  }
+  function route() {
+    var r = parse();
+    if (!r) { if (!current) r = { path: '/', q: new URLSearchParams() }; else return; }
+    var scr = screens.filter(function (s) { return s.getAttribute('data-route') === r.path; })[0] || screens[0];
+    var changed = scr !== current;
+    stopLive(); procTimers.forEach(clearTimeout);
+    if (changed) {
+      screens.forEach(function (s) { s.hidden = s !== scr; });
+      current = scr;
+      document.title = scr.getAttribute('data-title');
+      $$('[data-nav]').forEach(function (a) { if (a.getAttribute('data-nav') === r.path) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+      var menu = $('.pg-menu'); if (menu) menu.open = false;
+      fitRibbons(scr);
+      if (window.kit && window.kit.lenis) window.kit.lenis.resize();
+      if (window.kit) window.kit.goTo('top', true); else window.scrollTo(0, 0);
+      if (!first) {
+        replay(scr);
+        var h1 = $('h1', scr); if (h1) { h1.setAttribute('tabindex', '-1'); h1.focus({ preventScroll: true }); }
+      }
+    }
+    first = false;
+    var p = r.path;
+    if (p === '/room') startRoom();
+    if (p === '/join') startMic();
+    if (p === '/processing') runProcessing();
+    if (p === '/transcript' && r.q.get('t')) hitLine(r.q.get('t'));
+    if (p === '/report' && r.q.get('m')) { var m = document.getElementById('m-' + r.q.get('m')); if (m) setTimeout(function () { goEl(m); }, 80); }
+    window.dispatchEvent(new Event('scroll'));
+  }
+  window.addEventListener('hashchange', route);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden && current && current.getAttribute('data-route') === '/room') roomFrame(); });
+  route();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fitRibbons(current); });
+})();
+</script>
+</body>
+</html>
