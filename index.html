@@ -7,7 +7,10 @@
 <title>PeerLens prototype</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='14' cy='14' r='9' fill='none' stroke='%23141414' stroke-width='5'/%3E%3Ccircle cx='24' cy='24' r='5' fill='%23F5B93E'/%3E%3C/svg%3E">
 <meta name="description" content="Clickable prototype of PeerLens, a designed concept for practising case-based group discussions with peers. Critical path and statutory screens, sample data only.">
-<script>window.KIT = { offset: 124 };</script>
+<script>window.KIT = { offset: 124 };
+/* Feature codes (CP1, S2...) are for reviewers, so they start hidden. ?codes=1 or ?codes=0 in the link sets the choice. */
+(function () { try { var q = /[?&]codes=([01])/.exec(location.search); if (q) localStorage.setItem('pl-codes', q[1] === '1' ? 'on' : 'off');
+  if (localStorage.getItem('pl-codes') === 'on') document.documentElement.classList.add('pg-codes-on'); } catch (e) {} })();</script>
 <!-- studio:begin system=peerlens components=no (built by pl_build.py; edit the page, not this block) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -358,6 +361,18 @@ button,input{font:inherit}
 .pg-fine{font-size:.875rem;color:var(--muted)}
 .pg-id{display:inline-flex;align-items:center;height:1.375rem;padding:0 .5625rem;border-radius:62.4375rem;font-size:.71875rem;font-weight:800;letter-spacing:.03em;
   background:color-mix(in srgb,var(--ink) 9%,transparent);color:var(--ink)}
+/* Codes stay on the feature map; everywhere else they show only when the reviewer switch is on */
+:root:not(.pg-codes-on) :not(.pg-frow)>.pg-id,:root:not(.pg-codes-on) .pg-ids{display:none}
+.pg-codes{display:inline-flex;align-items:center;gap:.5rem;height:2.75rem;padding:0 .875rem 0 .625rem;border:0;border-radius:62.4375rem;background:var(--card);color:var(--ink);
+  font:700 .875rem/1 var(--sans);cursor:pointer;flex:none;white-space:nowrap}
+/* Off: an outlined track with a small dark knob, so the control reads on white. On: a filled ink track. */
+.pg-codes__track{position:relative;width:2.125rem;height:1.25rem;border-radius:62.4375rem;box-shadow:inset 0 0 0 .125rem var(--muted);flex:none;transition:background-color .2s ease,box-shadow .2s ease}
+.pg-codes__track::after{content:"";position:absolute;left:.3125rem;top:.3125rem;width:.625rem;height:.625rem;border-radius:50%;background:var(--muted);transition:transform .2s cubic-bezier(.2,.8,.2,1),background-color .2s ease}
+.pg-codes[aria-checked="true"] .pg-codes__track{background:var(--ink);box-shadow:none}
+.pg-codes[aria-checked="true"] .pg-codes__track::after{background:var(--card);transform:translateX(.875rem)}
+.pg-menu__panel .pg-codes{height:3rem;width:100%;padding:0 .875rem;border-radius:.875rem;background:transparent;font-size:.9375rem;justify-content:space-between;display:none}
+.pg-menu__panel .pg-codes:hover{background:var(--rail);color:#141414}
+.pg-codesline{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;margin-top:1.25rem}
 .pg-sample{display:inline-flex;align-items:center;height:1.625rem;padding:0 .75rem;border-radius:62.4375rem;background:var(--card);color:var(--ink);font-size:.75rem;font-weight:700;
   box-shadow:inset 0 0 0 .0625rem var(--line)}
 .pg-btn{display:inline-flex;align-items:center;justify-content:center;gap:.625rem;min-height:3.25rem;padding:0 1.625rem;border-radius:62.4375rem;border:0;
@@ -535,8 +550,12 @@ button,input{font:inherit}
 .pg-row.is-speaking{box-shadow:inset 0 0 0 .125rem var(--ink)}
 .pg-lane__state{transition:color .2s}
 .is-speaking .pg-lane__state{color:var(--mark);font-weight:800}
-.pg-controls{display:grid;grid-template-columns:1fr 1fr;gap:.625rem;margin-top:.25rem}
+/* Mute leads: it is the control people reach for most. Leaving and ending sit quieter, below it. */
+.pg-controls{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.625rem;margin-top:.25rem}
+.pg-controls .pg-btn{padding:0 1.25rem}
 .pg-controls .pg-btn--ink{grid-column:1/-1}
+.pg-slash{display:none}
+[aria-pressed="true"] .pg-slash{display:inline}
 
 /* Processing */
 .pg-psteps{list-style:none;margin:0;padding:.625rem;display:flex;flex-direction:column;gap:.125rem}
@@ -677,6 +696,7 @@ button,input{font:inherit}
 .pg-fmap{padding:.625rem}
 .pg-frow{display:grid;grid-template-columns:3.875rem minmax(0,1fr) 8rem auto;gap:1rem;align-items:center;padding:.875rem 1rem;border-radius:1.125rem}
 .pg-frow+.pg-frow{box-shadow:0 -.0625rem 0 var(--line)}
+.pg-frow .pg-id{justify-content:center}
 .pg-frow:hover{background:color-mix(in srgb,var(--ink) 4%,transparent);box-shadow:none}
 .pg-frow h2{font-size:1.03125rem;line-height:1.25;letter-spacing:-.01em}
 .pg-frow p{font-size:.875rem;color:var(--muted)}
@@ -772,7 +792,7 @@ button,input{font:inherit}
   .pg-lane .pg-lane__state{display:none}
   .pg-lane .pg-ribbon{flex:none;width:2.25rem;height:.875rem;gap:.125rem}
   .pg-lane .pg-ribbon i{flex-basis:.1875rem}
-  .pg-controls{grid-template-columns:auto auto minmax(0,1fr)}
+  .pg-controls{grid-template-columns:minmax(0,1fr) auto auto}
   .pg-controls .pg-btn{padding:0 1rem}
   .pg-controls .pg-btn--ink{grid-column:auto}
   .pg-goal{padding:1.5rem 1.25rem 1.375rem}
@@ -787,6 +807,9 @@ button,input{font:inherit}
 }
 @media (max-width:600px){
   .pg-proto{display:none}
+  /* No room for the codes switch in a phone's top bar, so it moves into the menu */
+  .pg-codes--bar{display:none}
+  .pg-menu__panel .pg-codes{display:flex}
   .pg-hero h1{font-size:clamp(2.125rem,10vw,2.625rem)}
   .pg-cookie{bottom:.625rem;width:calc(100% - 1.25rem)}
   /* Phones: the step tracker keeps to one row, naming only the current step (the rest keep their names for screen readers) */
@@ -830,8 +853,10 @@ button,input{font:inherit}
         <a href="#/terms" data-nav="/terms">Terms of use</a>
         <a href="#/contact" data-nav="/contact">Company and grievance contact</a>
         <a href="#/features" data-nav="/features">Feature map</a>
+        <button class="pg-codes" type="button" role="switch" aria-checked="false" data-codes>Show feature codes<span class="pg-codes__track" aria-hidden="true"></span></button>
       </div>
     </details>
+    <button class="pg-codes pg-codes--bar kit-press" type="button" role="switch" aria-checked="false" data-codes><span class="pg-codes__track" aria-hidden="true"></span>Codes</button>
     <button class="pg-icon kit-press" type="button" data-kit-theme aria-label="Switch theme">
       <svg class="kit-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
       <svg class="kit-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.2M12 19.8V22M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M2 12h2.2M19.8 12H22M4.9 19.1l1.6-1.6M17.5 6.5l1.6-1.6"/></svg>
@@ -1109,10 +1134,10 @@ button,input{font:inherit}
         </div>
         <p class="pg-sr" id="speakNow" aria-live="polite"></p>
         <div class="pg-controls">
-          <button class="pg-btn pg-btn--cream kit-press" type="button" id="muteBtn" aria-pressed="false">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span>Mute</span></button>
+          <button class="pg-btn pg-btn--ink kit-press" type="button" id="muteBtn" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/><path class="pg-slash" d="M3 3l18 18"/></svg><span>Mute</span></button>
           <a class="pg-btn pg-btn--cream kit-press" href="#/"><span>Leave<span class="pg-fl-long"> room</span></span></a>
-          <button class="pg-btn pg-btn--ink kit-press" type="button" data-go="#/processing"><span class="pg-fl-long">End the session (demo)</span><span class="pg-fl-short">End (demo)</span></button>
+          <button class="pg-btn pg-btn--cream kit-press" type="button" data-go="#/processing"><span class="pg-fl-long">End session (demo)</span><span class="pg-fl-short">End (demo)</span></button>
         </div>
       </div>
     </section>
@@ -1505,6 +1530,10 @@ button,input{font:inherit}
         <p class="pg-kick">For reviewers</p>
         <h1 id="h-fmap">Feature map</h1>
         <p class="pg-lede">Every MVP feature in this prototype, and the screen where you can try it without signing in.</p>
+        <div class="pg-codesline">
+          <button class="pg-codes kit-press" type="button" role="switch" aria-checked="false" data-codes><span class="pg-codes__track" aria-hidden="true"></span>Show the codes on every screen</button>
+          <span class="pg-fine">Off by default, so the screens look the way students would see them.</span>
+        </div>
       </div>
       <div class="pg-card pg-fmap" data-reveal>
         <div class="pg-frow kit-lift"><span class="pg-id">CP1</span><div><h2>Join a practice room by invite link</h2><p>Open an invite, type a name and enter the room without an account.</p></div><span class="pg-ftype">Critical path</span><a href="#/invite">Invite and name</a></div>
@@ -1733,6 +1762,20 @@ button,input{font:inherit}
     if (open) $('input:checked', goalPick).focus();
   });
   applyGoal();
+
+  /* Feature codes switch: the top bar, the phone menu and the feature map all show one state, kept in this browser */
+  var codeSwitches = $$('[data-codes]');
+  function paintCodes() {
+    var on = document.documentElement.classList.contains('pg-codes-on');
+    codeSwitches.forEach(function (s) { s.setAttribute('aria-checked', on ? 'true' : 'false'); });
+  }
+  codeSwitches.forEach(function (s) {
+    s.addEventListener('click', function () {
+      var on = document.documentElement.classList.toggle('pg-codes-on');
+      lset('pl-codes', on ? 'on' : 'off'); paintCodes();
+    });
+  });
+  paintCodes();
 
   /* Consent, name, buttons that navigate */
   var agree = $('#agree'), go = $('#consentGo');
